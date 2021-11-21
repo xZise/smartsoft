@@ -56,9 +56,10 @@ class EmployeeDisplay extends TableDisplay {
     }
 
     protected function getSQLQuery(): String {
-        return "SELECT ID, Name, Username, Administrator, IFNULL(ContactCount, 0) AS ContactCount
+        return "SELECT ID, Name, Username, Administrator, CASE WHEN IFNULL(ContactCount, 0) + IFNULL(MessageCount, 0) > 0 THEN 1 ELSE 0 END AS Constrained
                 FROM employee
-                LEFT JOIN (SELECT COUNT(*) AS ContactCount, Contact FROM customer GROUP BY Contact) counts ON counts.Contact = employee.ID";
+                LEFT JOIN (SELECT COUNT(*) AS ContactCount, Contact FROM customer GROUP BY Contact) contactCounts ON contactCounts.Contact = employee.ID
+                LEFT JOIN (SELECT COUNT(*) AS MessageCount, Sender FROM message WHERE Sender IS NOT NULL GROUP BY Sender) messageCounts ON messageCounts.Sender = employee.ID";
     }
 
     protected function getSingular(): String {
@@ -70,6 +71,6 @@ class EmployeeDisplay extends TableDisplay {
     }
 
     protected function canDelete($row): bool {
-        return $row["ContactCount"] === 0;
+        return $row["Constrained"] === 0;
     }
 }
