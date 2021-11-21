@@ -3,6 +3,7 @@
 namespace SmartSoft\Types;
 
 require_once("classes/Types/BaseType.php");
+require_once("classes/Types/Field.php");
 
 final class CustomerType extends BaseType {
 
