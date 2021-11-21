@@ -2,7 +2,7 @@
 
 namespace SmartSoft\Types;
 
-abstract class BaseType {
+class BaseType {
 
     private string $typeName;
     private array $fields;

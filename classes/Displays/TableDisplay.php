@@ -3,6 +3,7 @@
 namespace SmartSoft\Displays;
 
 require_once("classes/Database.php");
+require_once("classes/HtmlOption.php");
 require_once("classes/Role.php");
 require_once("classes/User.php");
 require_once("classes/Displays/UserDisplay.php");
@@ -11,6 +12,7 @@ require_once("classes/Types/BaseType.php");
 require_once("classes/Types/Field.php");
 
 use SmartSoft\Database;
+use SmartSoft\HtmlOption;
 use SmartSoft\Role;
 use SmartSoft\User;
 use SmartSoft\Exceptions\InsufficientRightsException;
@@ -106,8 +108,9 @@ abstract class TableDisplay extends UserDisplay {
                 $htmlCode .= "<td>{$this->getFieldValue($row, $field)}</td>";
             }
             if ($this->canModify) {
+                $deleteDisabled = HtmlOption::disabled(!$this->canDelete($row));
                 $htmlCode .= "<td><form class=\"operation\"><input type=\"hidden\" value=\"$row[ID]\" name=\"ID\" /><input type=\"hidden\" name=\"page\" value=\"{$this->pageName}\" /><button name=\"action\" value=\"edit\" style=\"color: green;\" class=\"anim-button bordered\">✎</button>
-                <button name=\"action\" value=\"delete\" style=\"color: red;\" class=\"anim-button bordered\">✖</button></form></td>";
+                <button name=\"action\" value=\"delete\" style=\"color: red;\" class=\"anim-button bordered\"$deleteDisabled>✖</button></form></td>";
             }
             $htmlCode .= "</tr>";
         }
@@ -148,6 +151,8 @@ abstract class TableDisplay extends UserDisplay {
             $db = null;
         }
     }
+
+    protected abstract function canDelete($row): bool;
 
     protected abstract function getSQLQuery(): String;
 

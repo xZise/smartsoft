@@ -56,7 +56,9 @@ class EmployeeDisplay extends TableDisplay {
     }
 
     protected function getSQLQuery(): String {
-        return "SELECT ID, Name, Username, Administrator FROM employee";
+        return "SELECT ID, Name, Username, Administrator, IFNULL(ContactCount, 0) AS ContactCount
+                FROM employee
+                LEFT JOIN (SELECT COUNT(*) AS ContactCount, Contact FROM customer GROUP BY Contact) counts ON counts.Contact = employee.ID";
     }
 
     protected function getSingular(): String {
@@ -65,5 +67,9 @@ class EmployeeDisplay extends TableDisplay {
 
     protected function getPlural(): String {
         return $this->getSingular();
+    }
+
+    protected function canDelete($row): bool {
+        return $row["ContactCount"] === 0;
     }
 }

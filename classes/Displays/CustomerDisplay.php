@@ -30,9 +30,10 @@ class CustomerDisplay extends TableDisplay {
                 $params[] = $this->user->getId();
                 $condition = " WHERE customer.Contact = ?";
             }
-            $customers = $db->fetchAll("SELECT customer.ID, customer.CustomerNo, customer.Username, employee.Name As ContactName, Tariff, tariff.Name As TariffName
+            $customers = $db->fetchAll("SELECT customer.ID, customer.CustomerNo, customer.Username, employee.Name AS ContactName, Tariff, tariff.Name AS TariffName, IFNULL(ThreadCount, 0) AS ThreadCount
                                         FROM customer
                                         JOIN employee ON customer.Contact = employee.ID
+                                        LEFT JOIN (SELECT COUNT(*) AS ThreadCount, Customer FROM thread) counts ON counts.Customer = customer.ID
                                         JOIN tariff ON customer.Tariff = tariff.ID $condition", \PDO::FETCH_NAMED, $params);
         } finally {
             $db = null;
@@ -87,5 +88,9 @@ class CustomerDisplay extends TableDisplay {
 
     protected function getPlural(): String {
         return "Kunden";
+    }
+
+    protected function canDelete($row): bool {
+        return $row["ThreadCount"] === 0;
     }
 }

@@ -295,7 +295,8 @@ div.container > main {
     --end-text-color: var(--accent-text-color);
 }
 
-.anim-button:hover, .anim-button:focus-within {
+.anim-button:not([disabled]):not(.anim-button.disabled):hover,
+.anim-button:not([disabled]):not(.anim-button.disabled):focus-within {
     background-position: left;
     color: var(--end-text-color);
 }
@@ -303,6 +304,15 @@ div.container > main {
 .anim-button.bordered {
     border: 0.2em solid var(--end-color);
     border-radius: 0.2em;
+}
+
+.anim-button[disabled], .anim-button.disabled {
+    background: hsl(0, 0%, 70%) !important;
+    color: hsl(0, 0%, 50%) !important;
+}
+
+.anim-button.bordered[disabled], .anim-button.bordered.disabled {
+    border-color: hsl(0, 0%, 50%) !important;
 }
 
 div.thread .anim-button {
