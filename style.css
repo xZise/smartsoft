@@ -4,13 +4,10 @@
     --main-color: #094a8c;
     --accent-color: #ffc500;
 
+    --main-text-color: white;
+    --accent-text-color: var(--main-color);
+
     --main-muted-color: #009eb5;
-
-    --bg-color: #094a8c;
-    --snd-color: #ffc500;
-
-    --text-color: white;
-    --snd-text-color: var(--main-color);
 }
 
 body, html {
@@ -28,7 +25,7 @@ body {
 header {
     padding: var(--menu-padding);
     background: var(--main-color);
-    color: var(--text-color);
+    color: var(--main-text-color);
     display: flex;
     gap: 1em;
     justify-content: space-between;
@@ -69,7 +66,7 @@ div.login > div {
     min-width: 10em;
     max-width: 20em;
     margin: 3em auto;
-    border: 0.2em solid var(--bg-color);
+    border: 0.2em solid var(--main-color);
     border-radius: 0.2em;
 }
 
@@ -88,8 +85,8 @@ div.login form select {
 
 /* The first item and each notification should have a certain backgound. */
 div.login > div > :first-child, div.notifications > div {
-    background: var(--bg-color);
-    color: var(--text-color);
+    background: var(--main-color);
+    color: var(--main-text-color);
     padding: 4px;
     text-align: center;
 }
@@ -97,13 +94,13 @@ div.login > div > :first-child, div.notifications > div {
 /* Each notification should also have their own margin and border. */
 div.notifications > div {
     margin: 4px;
-    border: 0.2em solid var(--bg-color);
+    border: 0.2em solid var(--main-color);
     border-radius: 0.2em;
 }
 
 /* Error notifications have their own background color. */
 div.notifications > div.error {
-    --bg-color: coral;
+    --main-color: coral;
 }
 
 /* Customer and Employee tables */
@@ -167,8 +164,8 @@ form.table input[type="checkbox"] {
 }
 
 div.thread:nth-child(odd) {
-    --bg-color: var(--snd-color);
-    --text-color: var(--snd-text-color);
+    --bg-color: var(--accent-color);
+    --text-color: var(--accent-text-color);
 }
 
 div.header-container>div {
@@ -211,6 +208,8 @@ div.thread form.message>* {
 }
 
 div.thread {
+    --bg-color: var(--main-color);
+    --text-color: var(--main-text-color);
     border-left: 4px solid var(--bg-color);
     margin: 1em 0px;
 }
@@ -288,6 +287,12 @@ div.container > main {
     color: var(--start-text-color);
     transition: .2s ease-out;
     border: none;
+
+    /* Default colors, from white to snd-color */
+    --start-color: white;
+    --start-text-color: var(--accent-text-color);
+    --end-color: var(--accent-color);
+    --end-text-color: var(--accent-text-color);
 }
 
 .anim-button:hover, .anim-button:focus-within {
@@ -310,19 +315,12 @@ div.thread .anim-button {
 /* Navigation Handling */
 
 nav {
-    background: var(--bg-color);
-}
-
-.anim-button {
-    --start-color: white;
-    --start-text-color: var(--snd-text-color);
-    --end-color: var(--snd-color);
-    --end-text-color: var(--snd-text-color)
+    background: var(--main-color);
 }
 
 nav>div.selected {
-    --start-color: var(--bg-color);
-    --start-text-color: var(--text-color);
+    --start-color: var(--main-color);
+    --start-text-color: var(--main-text-color);
 }
 
 /* Style links and button explicitly, to make them look alike */
