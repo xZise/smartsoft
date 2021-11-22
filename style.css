@@ -21,6 +21,10 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
+body > footer {
+    grid-row: -2 / -1;
+}
+
 /* Header formatting: One row of vertically centered items, with the same padding of the buttons and space between items */
 header {
     padding: var(--menu-padding);
