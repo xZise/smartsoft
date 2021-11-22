@@ -33,7 +33,7 @@ abstract class TableProcessor extends Processor {
         $this->user = User::create();
     }
 
-    protected function processAction(String $action) {
+    protected function processAction(string $action) {
         if ($this->user->getRole() != Role::Administrator) {
             throw new ProcessActionException();
         }
@@ -57,11 +57,11 @@ abstract class TableProcessor extends Processor {
         }
     }
 
-    protected function getValue($column) {
+    protected function getValue(string $column): mixed {
         return $_POST[$column];
     }
 
-    private function bindParams($stmt) {
+    private function bindParams(\PDOStatement $stmt) {
         foreach ($this->fields as $idx => $column) {
             $stmt->bindValue($idx + 1, $this->getValue($column));
         }

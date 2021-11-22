@@ -2,6 +2,12 @@
 
 namespace SmartSoft\Processors;
 
+/**
+ * This file is called every time some change to the database needs to be executed. It'll select the appropriate
+ * processor depending on the selected page and then handles the given action. Unknown pages lead to unsupported
+ * behavior.
+ */
+
 require_once("classes/LoginState.php");
 
 require_once("classes/Processors/AccountProcessor.php");

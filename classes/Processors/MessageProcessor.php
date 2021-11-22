@@ -14,16 +14,22 @@ use SmartSoft\Role;
 use SmartSoft\User;
 use SmartSoft\Exceptions\ProcessActionException;
 
+/**
+ * The processor handling sending messages, using a new thread or an already existing one.
+ */
 class MessageProcessor extends Processor {
 
     private User $user;
 
+    /**
+     * Creates a new processor instance for messages.
+     */
     public function __construct() {
         parent::__construct("message");
         $this->user = User::create();
     }
 
-    protected function processAction(String $action) {
+    protected function processAction(string $action) {
         switch ($action) {
             case "send": return $this->processSendAction();
             case "reply": return $this->processReplyAction();
@@ -31,6 +37,10 @@ class MessageProcessor extends Processor {
         }
     }
 
+    /**
+     * Adds a new thread and a new message for that thread. As only customers can start a thread, the sender will
+     * always be null.
+     */
     private function processSendAction() {
         if ($this->user->getRole() != Role::Customer) {
             throw new ProcessActionException();
@@ -43,14 +53,19 @@ class MessageProcessor extends Processor {
             $stmt->bindValue(2, $_POST["Subject"]);
             $stmt->execute();
 
-            $stmt = $db->getDatabase()->prepare("INSERT INTO message (Thread, Sender, Text) VALUES (LAST_INSERT_ID(), NULL, ?)");
+            $stmt = $db->getDatabase()->prepare("INSERT INTO message (Thread, Sender, Text)
+                                                 VALUES (LAST_INSERT_ID(), NULL, ?)");
             $stmt->bindValue(1, $_POST["Text"]);
             $stmt->execute();
         } finally {
             $db = null;
         }
     }
-
+    
+    /**
+     * Handles the reply related actions by adding a message to the table. When the message is from an employee it's ID
+     * is used for the sender and null otherwise.
+     */
     private function processReplyAction() {
         $db = new Database();
         try {

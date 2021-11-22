@@ -1,8 +1,14 @@
 <?php
     namespace SmartSoft;
 
+    /**
+     * The user facing page which creates a display, depending on the current login state and the specified page.
+     *
+     * It then inserts the display information (title and content).
+     */
+
     session_start();
-    
+
     require_once("classes/User.php");
 
     require_once("classes/Displays/AccountDisplay.php");

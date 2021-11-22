@@ -16,6 +16,9 @@ use SmartSoft\Types\EmployeeType;
 use SmartSoft\Types\Field;
 
 
+/**
+ * EmployeeDisplay for listing, editing, adding and removing customers.
+ */
 class EmployeeDisplay extends TableDisplay {
 
     public function __construct(User $user, String $action) {

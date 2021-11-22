@@ -7,6 +7,9 @@ require_once("classes/Database.php");
 
 use \PDO as PDO;
 
+/**
+ * A class representing a user. It is only possible to create an User object, with the create static method.
+ */
 final class User {
 
     /**
@@ -50,7 +53,7 @@ final class User {
     private int $role;
     private bool $hasPasswordSet;
 
-    private function __construct(String $name, string $username, int $id, int $role, bool $hasPassword) {
+    private function __construct(string $name, string $username, int $id, int $role, bool $hasPassword) {
         $this->name = $name;
         $this->username = $username;
         $this->id = $id;
@@ -58,22 +61,37 @@ final class User {
         $this->hasPasswordSet = $hasPassword;
     }
 
-    public function getName(): String {
+    /**
+     * Returns the name of the user, which is the customer number for customers and the name itself for employees.
+     */
+    public function getName(): string {
         return $this->name;
     }
 
+    /**
+     * Returns the username of the user.
+     */
     public function getUsername(): string {
         return $this->username;
     }
 
+    /**
+     * Returns the id of the user.
+     */
     public function getId(): int {
         return $this->id;
     }
 
+    /**
+     * Returns the role of the user.
+     */
     public function getRole(): int {
         return $this->role;
     }
 
+    /**
+     * Returns whether the user has a password set.
+     */
     public function hasPassword(): bool {
         return $this->hasPasswordSet;
     }

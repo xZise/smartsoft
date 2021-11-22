@@ -25,28 +25,44 @@ abstract class TableDisplay extends UserDisplay {
 
     private bool $canModify;
     private $properties;
-    private String $nameProperty;
+    private string $nameProperty;
 
-    public function __construct(User $user, String $action, BaseType $baseType) {
+    public function __construct(User $user, string $action, BaseType $baseType) {
         parent::__construct($user, $action, $baseType->getTypeName());
         $this->properties = $baseType->getFields();
         $this->canModify = $this->user->getRole() == Role::Administrator;
         $this->nameProperty = $this->properties[1]->getColumn();
     }
-
+    
+    /**
+     * Returns the list described by this display.
+     *
+     * @return array A row of arrays containing each row for the table.
+     */
     protected abstract function getList(): array;
 
     public function checkRights(): bool {
         return $this->user->getRole() != Role::Customer && ($this->action == "list" || $this->canModify);
     }
-
+    
+    /**
+     * Throws InsufficientRightsException, when the user cannot modify data.
+     */
     private function checkModify() {
         if (!$this->canModify) {
             throw new InsufficientRightsException();
         }
     }
-
-    protected function generateEdit($row, Field $field): String {
+    
+    /**
+     * Generate HTML for an input for the given field and with the given data. This uses a textfield with the name and
+     * id set to $field->getColumn().
+     *
+     * @param array $row Preselect/-populate the input using the data from the row. Is @null, when it is a new row.
+     * @param Field $field The field this edit should correspond to.
+     * @return string The HTML code for the given field.
+     */
+    protected function generateEdit(?array $row, Field $field): string {
         $value = $row == null ? "" : $field->getRowValue($row);
         return "<input type=\"text\" name=\"{$field->getColumn()}\" id=\"{$field->getColumn()}\" value=\"$value\" />";
     }
@@ -127,7 +143,7 @@ abstract class TableDisplay extends UserDisplay {
         return $field->getListValue($row);
     }
 
-    public function handleAction(): String {
+    public function handleAction(): string {
         switch ($this->action) {
             case "add": return $this->getAddPage();
             case "edit": return $this->getEditPage();
@@ -160,13 +176,13 @@ abstract class TableDisplay extends UserDisplay {
 
     protected abstract function canDelete($row): bool;
 
-    protected abstract function getSQLQuery(): String;
+    protected abstract function getSQLQuery(): string;
 
-    protected abstract function getSingular(): String;
+    protected abstract function getSingular(): string;
 
-    protected abstract function getPlural(): String;
+    protected abstract function getPlural(): string;
 
-    public function getTitle(): String {
+    public function getTitle(): string {
         switch ($this->action) {
             case "add": return "{$this->getSingular()} hinzufügen";
             case "edit": return "{$this->getSingular()} bearbeiten";

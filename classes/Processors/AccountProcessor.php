@@ -13,8 +13,10 @@ use SmartSoft\Database;
 use SmartSoft\Role;
 use SmartSoft\User;
 use SmartSoft\Exceptions\ProcessActionException;
-use Throwable;
 
+/**
+ * This processor handles changing the password of the currently logged in user.
+ */
 class AccountProcessor extends Processor {
 
     private User $user;
@@ -24,7 +26,7 @@ class AccountProcessor extends Processor {
         $this->user = User::create();
     }
 
-    protected function processAction(String $action) {
+    protected function processAction(string $action) {
         $newPassword = $_POST["new_password"] ?? "";
         if ($newPassword === "" || $newPassword !== $_POST["new_password_repeat"]) {
             throw new ProcessActionException();

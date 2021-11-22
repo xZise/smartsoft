@@ -11,13 +11,22 @@ use SmartSoft\User;
 use SmartSoft\Role;
 use SmartSoft\Exceptions\InvalidActionException;
 
+/**
+ * A display for showing messages, sending new ones and replying to existing ones.
+ */
 class MessageDisplay extends UserDisplay {
 
     public function __construct(User $user, String $action) {
         parent::__construct($user, $action, "message");
     }
-
-    private function buildMessage($completeThread) {
+    
+    /**
+     * Creates the HTML code for one thread.
+     *
+     * @param mixed $completeThread The thread with the messages inside it.
+     * @return string The HTML code.
+     */
+    private function buildMessage($completeThread): string {
         $tariffText = str_repeat("🪙 ", $completeThread["Tariff"]);
 
         $subject = htmlspecialchars($completeThread["Subject"]);
@@ -45,8 +54,15 @@ class MessageDisplay extends UserDisplay {
         $code .= "</div></div>";
         return $code;
     }
-
-    private function buildMessages($conditionColumn, $conditionValue): string {
+    
+    /**
+     * Creates the HTML code for the threads and messages using the given conditions.
+     *
+     * @param string $conditionColumn The column which should be checked in the WHERE-clause.
+     * @param string $conditionValue The value to which the column should be checked.
+     * @return string The HTML code for the threads and messages.
+     */
+    private function buildMessages(string $conditionColumn, string $conditionValue): string {
         $db = new Database();
         try {
             $threads = $db->fetchAll("SELECT thread.ID, thread.Subject, thread.Customer, customer.Tariff
@@ -89,8 +105,13 @@ class MessageDisplay extends UserDisplay {
         $code .= "</div>";
         return $code;
     }
-
-    public function getList(): string {
+    
+    /**
+     * Returns the list of all threads and messages corresponding to the current user.
+     *
+     * @return string The HTML code for those threads and messages.
+     */
+    private function getList(): string {
         if ($this->user->getRole() == Role::Customer) {
             $column = "customer.ID";
         } else {
@@ -139,8 +160,15 @@ class MessageDisplay extends UserDisplay {
             return false;
         }
     }
-
-    private function getMessageForm(?int $id): String {
+    
+    /**
+     * Returns the HTML code for a message input form. Will include a hidden field with the ID if it is not null and
+     * otherwise a field for the subject.
+     *
+     * @param ?int $id The ID of the thread.
+     * @return string The HTML code for a message input form.
+     */
+    private function getMessageForm(?int $id): string {
         $code = "<form class=\"message\" method=\"POST\" action=\"process.php\"><input type=\"hidden\" name=\"page\" value=\"{$this->pageName}\" /><input type=\"hidden\" name=\"action\" value=\"{$this->action}\" />";
         if ($id === null) {
             $code .= "<label for=\"Subject\">Betreff:</label><input type=\"text\" name=\"Subject\" value=\"\" />";
@@ -154,7 +182,7 @@ class MessageDisplay extends UserDisplay {
         return $code;
     }
 
-    public function getReplyForm(): String {
+    private function getReplyForm(): String {
         $id = $_GET["ID"];
         $code = $this->buildMessages("thread.ID", $id);
 
@@ -164,7 +192,7 @@ class MessageDisplay extends UserDisplay {
 
     }
 
-    public function getSendForm(): String {
+    private function getSendForm(): String {
         $code = $this->getMessageForm(null);
 
         return $code;

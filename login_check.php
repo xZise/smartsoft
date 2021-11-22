@@ -2,6 +2,12 @@
 
 namespace smartsoft;
 
+/**
+ * This file is called, whenever someone logs in or out. Depneind on the type it updates the current login state for
+ * that session via the LoginState class. It supports the types "login", which also requires "username", "role" and
+ * "password", or "logout".
+ */
+
 require_once("classes/LoginState.php");
 require_once("classes/Database.php");
 

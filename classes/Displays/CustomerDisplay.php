@@ -17,9 +17,13 @@ use SmartSoft\Displays\TableDisplay;
 use SmartSoft\Types\CustomerType;
 use SmartSoft\Types\Field;
 
+
+/**
+ * CustomerDisplay for listing, editing, adding and removing customers.
+ */
 class CustomerDisplay extends TableDisplay {
 
-    public function __construct(User $user, String $action) {
+    public function __construct(User $user, string $action) {
         parent::__construct($user, $action, CustomerType::getInstance());
     }
 
@@ -52,8 +56,18 @@ class CustomerDisplay extends TableDisplay {
         }
         return $value;
     }
-
-    private function generateOption(String $name, String $query, $value): String {
+    
+    /**
+     * Queries the database with the given query and creates an select with those items. The query needs to have two
+     * columns named ID and Name. The Name column is used for the text of the option, while the ID is used for the
+     * value of each option. The option which has the same "ID" as to $value will be preselected.
+     *
+     * @param string $name The name and id of the select.
+     * @param string $query The SQL query to determine each selectable value. Needs to return an ID and Name column.
+     * @param mixed $value The preselected value. It won't preselect any option when set to null.
+     * @return string The HTML code for a select with the queried options.
+     */
+    private function generateOption(string $name, string $query, $value): string {
         $db = new Database();
         try {
             $data = $db->fetchAll($query);
@@ -69,7 +83,7 @@ class CustomerDisplay extends TableDisplay {
         return $code;
     }
 
-    public function generateEdit($row, Field $field): String {
+    public function generateEdit($row, Field $field): string {
         $value = $field->getRowValue($row);
         if ($field->getColumn() == "Contact") {
             return $this->generateOption($field->getColumn(), "SELECT ID, Name FROM employee ORDER BY Name", $value);

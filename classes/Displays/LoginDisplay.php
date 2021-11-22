@@ -8,12 +8,22 @@ require_once("classes/Displays/Display.php");
 use SmartSoft\LoginState;
 use SmartSoft\Notification;
 
+/**
+ * A display for the login screen.
+ */
 class LoginDisplay extends Display {
 
+    /**
+     * Creates the login form.
+     *
+     * @param bool $validPage Currently ignored
+     * @param bool $validRights Currently ignored
+     * @return string The login form as HTML code.
+     */
     public function createPage(bool $validPage, bool $validRights): string {
         $notifications = array();
         $loginState = LoginState::getAndResetState();
-        
+
         if ($loginState == LoginState::LoggedOut) {
             $notifications[] = new Notification("Erfolgreich abgemeldet", false);
         } elseif ($loginState == LoginState::Failed) {

@@ -1,6 +1,10 @@
 <?php
 namespace SmartSoft;
 
+/**
+ * A helper class creating an HTML attribute which represents a boolean. In HTML an attribute can be set by using
+ * attr="attr".
+ */
 final class HtmlOption {
 
     private static $selected;
