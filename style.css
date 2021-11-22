@@ -168,7 +168,7 @@ form.table input[type="checkbox"] {
     justify-self: start;
 }
 
-div.thread:nth-child(odd) {
+div.thread:nth-child(even) {
     --bg-color: var(--accent-color);
     --text-color: var(--accent-text-color);
 }

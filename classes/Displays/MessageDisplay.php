@@ -74,12 +74,17 @@ class MessageDisplay extends UserDisplay {
             $threadId = $message["Thread"];
             $threadsWithMessages[$threadId]["Messages"][] = $message;
         }
-        $code = "";
-        foreach ($threads as $thread) {
-            $threadId = $thread["ID"];
-            $completeThread = $threadsWithMessages[$threadId];
-            $code .= $this->buildMessage($completeThread);
+        $code = "<div>";
+        if (count($threads) > 0) {
+            foreach ($threads as $thread) {
+                $threadId = $thread["ID"];
+                $completeThread = $threadsWithMessages[$threadId];
+                $code .= $this->buildMessage($completeThread);
+            }
+        } else {
+            $code .= "Es gibt keine Nachrichten";
         }
+        $code .= "</div>";
         return $code;
     }
 
