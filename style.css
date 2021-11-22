@@ -47,7 +47,7 @@ header span {
     white-space: nowrap;
 }
 
-header a {
+header a, footer a {
     color: var(--accent-color);
 }
 
@@ -58,8 +58,12 @@ footer {
 	justify-content: center;
 	color: var(--accent-color);
 	padding: calc(var(--menu-padding)/2);
-    gap: calc(var(--menu-padding)/2);
     flex-wrap: wrap;
+}
+
+footer > div:not(:last-child)::after {
+	content: '⏺';
+	margin: 0 calc(var(--menu-padding) / 2);
 }
 
 /* Login page formatting */
@@ -67,7 +71,6 @@ footer {
 div.login {
     padding-left: 1em;
     padding-right: 1em;
-    flex-grow: 1;
 }
 
 /* Center in the middle */

@@ -76,5 +76,5 @@
     </head>
 <body>
     <?php echo($display->createPage($validPage, $validRights)); ?>
-    <footer><div>Impressum</div><div>© 2021</div></footer>
+    <footer><div>Impressum</div><div>Grafiken von <a href="https://icons8.com">icons8.com</a></div><div>© 2021</div></footer>
 </body>
