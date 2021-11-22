@@ -3,12 +3,14 @@
 namespace SmartSoft\Displays;
 
 require_once("classes/Database.php");
+require_once("classes/HtmlOption.php");
 require_once("classes/User.php");
 require_once("classes/Displays/TableDisplay.php");
 require_once("classes/Types/CustomerType.php");
 require_once("classes/Types/Field.php");
 
 use SmartSoft\Database;
+use SmartSoft\HtmlOption;
 use SmartSoft\User;
 use SmartSoft\Role;
 use SmartSoft\Displays\TableDisplay;
@@ -60,7 +62,7 @@ class CustomerDisplay extends TableDisplay {
         }
         $code = "<select id=\"$name\" name=\"$name\">";
         foreach ($data as $row) {
-            $selected = $value !== null && $row["ID"] == $value ? 'selected="selected"' : "";
+            $selected = HtmlOption::selected($value !== null && $row["ID"] == $value);
             $code .= "<option value=\"$row[ID]\" $selected>$row[Name]</option>";
         }
         $code .= "</select>";
