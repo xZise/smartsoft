@@ -2,11 +2,15 @@
 
 namespace SmartSoft\Displays;
 
+require_once("classes/Database.php");
 require_once("classes/HtmlOption.php");
+require_once("classes/Role.php");
 require_once("classes/User.php");
 require_once("classes/Displays/UserDisplay.php");
 
+use SmartSoft\Database;
 use SmartSoft\HtmlOption;
+use SmartSoft\Role;
 use SmartSoft\User;
 
 class AccountDisplay extends UserDisplay {
@@ -17,6 +21,20 @@ class AccountDisplay extends UserDisplay {
 
     public function getList() {
         $disabled = HtmlOption::disabled();
+        if ($this->user->getRole() == Role::Customer) {
+            $db = new Database();
+            try {
+                $contact = $db->fetchValue("SELECT employee.Name
+                                            FROM employee
+                                            JOIN customer ON customer.Contact = employee.ID
+                                            WHERE customer.ID = ?", array($this->user->getId()));
+            } finally {
+                $db = null;
+            }
+            $contactRow = "<label for=\"contact\">Ansprechpartner</label><input type=\"text\" id=\"contact\" $disabled value=\"$contact\" />";
+        } else {
+            $contactRow = "";
+        }
         if ($this->user->hasPassword()) {
             $oldPasswordDisabled = "";
             $oldPassword = "";
@@ -29,6 +47,7 @@ class AccountDisplay extends UserDisplay {
         $code = "<form action=\"process.php\" method=\"post\" class=\"table\">
                     <label for=\"username\">Benutzername:</label>
                     <input type=\"text\" id=\"username\" name=\"username\" $disabled value=\"{$this->user->getUsername()}\" />
+                    $contactRow
                     <label for=\"old_password\">Altes Passwort:</label>
                     <input type=\"$oldPasswordType\" id=\"old_password\" name=\"old_password\" value=\"$oldPassword\" $oldPasswordDisabled />
                     <label for=\"new_password\">Neues Passwort:</label>
