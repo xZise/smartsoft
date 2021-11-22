@@ -282,6 +282,10 @@ div.container > main {
     nav {
         padding-bottom: 0.5em;
     }
+
+    div.thread form.message span {
+        display: none;
+    }
 }
 
 /* Button animation handling */

@@ -25,7 +25,7 @@ class MessageDisplay extends UserDisplay {
                     <div>
                       <div class=\"subject\">Betreff: $subject</div>
                       <div class=\"tariff\">$tariffText</div>
-                      <div class=\"actions anim-button bordered\"><form class=\"message\"><input type=\"hidden\" name=\"action\" value=\"reply\" /><input type=\"hidden\" name=\"ID\" value=\"$completeThread[ID]\" /><button name=\"page\" value=\"{$this->pageName}\" type=\"submit\"><img src=\"img/msg-reply.png\" />Antworten</button></form></div>
+                      <div class=\"actions\"><form class=\"message\"><input type=\"hidden\" name=\"page\" value=\"{$this->pageName}\" /><input type=\"hidden\" name=\"ID\" value=\"$completeThread[ID]\" /><button name=\"action\" value=\"reply\" class=\"anim-button bordered\"><img src=\"img/msg-reply.png\" /><span>Antworten</span></button></form></div>
                     </div><div class=\"content\">";
         
         foreach ($completeThread["Messages"] as $message) {
