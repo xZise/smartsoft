@@ -98,14 +98,16 @@ div.login > div > :first-child, div.notifications > div {
 
 /* Each notification should also have their own margin and border. */
 div.notifications > div {
+    --bg-color: var(--main-color);
     margin: 4px;
-    border: 0.2em solid var(--main-color);
+    background: var(--bg-color);
+    border: 0.2em solid var(--bg-color);
     border-radius: 0.2em;
 }
 
 /* Error notifications have their own background color. */
 div.notifications > div.error {
-    --main-color: coral;
+    --bg-color: coral;
 }
 
 /* Customer and Employee tables */
@@ -142,6 +144,7 @@ main > div.main-title {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--gap);
 }
 
 main > div.main-title > :first-child {
