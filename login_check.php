@@ -18,15 +18,24 @@ if ($type == "login") {
         $db = new Database();
         try {
             if (isset($_POST["role"]) && $_POST["role"] == "employee") {
-                $result = $db->fetchAll("SELECT ID FROM employee WHERE Username = ?", \PDO::FETCH_NAMED, array($_POST["username"]));
+                $result = $db->fetchAll("SELECT ID, Password FROM employee WHERE Username = ?", \PDO::FETCH_NAMED, array($_POST["username"]));
                 $isEmployee = true;
             } else {
-                $result = $db->fetchAll("SELECT ID FROM customer WHERE Username = ?", \PDO::FETCH_NAMED, array($_POST["username"]));
+                $result = $db->fetchAll("SELECT ID, Password FROM customer WHERE Username = ?", \PDO::FETCH_NAMED, array($_POST["username"]));
                 $isEmployee = false;
             }
             if (count($result) == 1) {
-                var_dump($result[0]);
-                LoginState::setLoggedIn($result[0]["ID"], $isEmployee);
+                $result = $result[0];
+                if ($result["Password"] !== null) {
+                    $success = password_verify($_POST["password"], $result["Password"]);
+                } else {
+                    $success = $_POST["password"] === "";
+                }
+            } else {
+                $success = false;
+            }
+            if ($success) {
+                LoginState::setLoggedIn($result["ID"], $isEmployee);
                 LoginState::setState(LoginState::LoggedIn);
             } else {
                 LoginState::setState(LoginState::Failed);

@@ -21,9 +21,9 @@ final class User {
         try {
             $isEmployee = LoginState::getLoggedInEmployee();
             if ($isEmployee) {
-                $result = $db->fetchAll("SELECT Name, Administrator FROM employee WHERE ID = ?", PDO::FETCH_NAMED, array($id));
+                $result = $db->fetchAll("SELECT Name, Administrator, Username, Password FROM employee WHERE ID = ?", PDO::FETCH_NAMED, array($id));
             } else {
-                $result = $db->fetchAll("SELECT CustomerNo As Name FROM customer WHERE ID = ?", PDO::FETCH_NAMED, array($id));
+                $result = $db->fetchAll("SELECT CustomerNo As Name, Username, Password FROM customer WHERE ID = ?", PDO::FETCH_NAMED, array($id));
             }
             if (count($result) == 1) {
                 if ($isEmployee) {
@@ -35,7 +35,7 @@ final class User {
                 } else {
                     $role = Role::Customer;
                 }
-                return new User($result[0]["Name"], $id, $role);
+                return new User($result[0]["Name"], $result[0]["Username"], $id, $role, $result[0]["Password"] !== null);
             } else {
                 return null;
             }
@@ -45,17 +45,25 @@ final class User {
     }
 
     private String $name;
+    private string $username;
     private int $id;
     private int $role;
+    private bool $hasPasswordSet;
 
-    private function __construct(String $name, int $id, int $role) {
+    private function __construct(String $name, string $username, int $id, int $role, bool $hasPassword) {
         $this->name = $name;
+        $this->username = $username;
         $this->id = $id;
         $this->role = $role;
+        $this->hasPasswordSet = $hasPassword;
     }
 
     public function getName(): String {
         return $this->name;
+    }
+
+    public function getUsername(): string {
+        return $this->username;
     }
 
     public function getId(): int {
@@ -64,6 +72,10 @@ final class User {
 
     public function getRole(): int {
         return $this->role;
+    }
+
+    public function hasPassword(): bool {
+        return $this->hasPasswordSet;
     }
 
 }

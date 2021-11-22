@@ -17,7 +17,7 @@ class LoginDisplay extends Display {
         if ($loginState == LoginState::LoggedOut) {
             $notifications[] = new Notification("Erfolgreich abgemeldet", false);
         } elseif ($loginState == LoginState::Failed) {
-            $notifications[] = new Notification("Anmeldeversuch fehlgeschlagen. Vielleicht falscher Benutzername oder falsche Role?", true);
+            $notifications[] = new Notification("Anmeldeversuch fehlgeschlagen. Vielleicht falscher Benutzername, falsches Passwort oder falsche Role?", true);
         }
         $notifications = Notification::createNotificationBox($notifications);
 
@@ -28,6 +28,8 @@ class LoginDisplay extends Display {
             <form action=\"login_check.php\" method=\"post\">
                 <label for=\"username\">Benutzername:</label>
                 <input type=\"text\" id=\"username\" name=\"username\">
+                <label for=\"password\">Passwort:</label>
+                <input type=\"password\" id=\"password\" name=\"password\">
                 <label for=\"role\">Rolle:</label>
                 <select id=\"role\" name=\"role\">
                     <option value=\"customer\">Kunde</option>

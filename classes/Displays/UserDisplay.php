@@ -73,6 +73,9 @@ abstract class UserDisplay extends Display {
         }
 
         $notifications = array();
+        if (!$this->user->hasPassword()) {
+            $notifications[] = new Notification('Bitte legen sie ein Passwort über die <a href="?page=account">Kontoinformation</a> fest.', true);
+        }
         if (!$validRights) {
             $notifications[] = new Notification("Sie besitzen nicht die nötigen Rechte für die Seite.", true);
         }
@@ -81,7 +84,7 @@ abstract class UserDisplay extends Display {
         }
         $notifications = Notification::createNotificationBox($notifications);
 
-        return "<header><img src=\"img/SmartSoft-Logo.png\" alt=\"SmartSoft Logo\" title=\"Logo\" /><div>Angemeldeter Benutzer: <span>{$this->user->getName()} ($role)</span></div></header>
+        return "<header><img src=\"img/SmartSoft-Logo.png\" alt=\"SmartSoft Logo\" title=\"Logo\" /><div>Angemeldeter Benutzer: <span><a href=\"?page=account\">{$this->user->getName()}</a> ($role)</span></div></header>
     <div class=\"container\">
         <nav>
             $menu

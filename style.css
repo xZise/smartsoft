@@ -47,6 +47,10 @@ header span {
     white-space: nowrap;
 }
 
+header a {
+    color: var(--accent-color);
+}
+
 /* Footer formatting: At least one row of centered items. */
 footer {
 	background: var(--main-color);
@@ -108,6 +112,10 @@ div.notifications > div {
 /* Error notifications have their own background color. */
 div.notifications > div.error {
     --bg-color: coral;
+}
+
+div.notifications > div.error a {
+    color: var(--main-color);
 }
 
 /* Customer and Employee tables */

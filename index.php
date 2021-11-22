@@ -5,6 +5,7 @@
     
     require_once("classes/User.php");
 
+    require_once("classes/Displays/AccountDisplay.php");
     require_once("classes/Displays/CustomerDisplay.php");
     require_once("classes/Displays/MessageDisplay.php");
     require_once("classes/Displays/EmployeeDisplay.php");
@@ -32,6 +33,9 @@
 
         $validPage = true;
         switch ($page) {
+            case "account":
+                $display = new Displays\AccountDisplay($user, $action);
+                break;
             case "employee":
                 $display = new Displays\EmployeeDisplay($user, $action);
                 break;
