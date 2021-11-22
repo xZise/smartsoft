@@ -26,7 +26,9 @@ abstract class TableProcessor extends Processor {
         $this->baseType = $baseType;
         $this->fields = array();
         foreach ($this->baseType->getFields() as $field) {
-            $this->fields[] = $field->getColumn();
+            if ($field->getColumn() !== "ID") {
+                $this->fields[] = $field->getColumn();
+            }
         }
         $this->user = User::create();
     }
