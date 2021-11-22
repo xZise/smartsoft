@@ -21,7 +21,7 @@ class CustomerDisplay extends TableDisplay {
         parent::__construct($user, $action, CustomerType::getInstance());
     }
 
-    public function getList() {
+    protected function getList(): array {
         $db = new Database();
         try {
             $params = array();
@@ -38,7 +38,7 @@ class CustomerDisplay extends TableDisplay {
         } finally {
             $db = null;
         }
-        return $this->getTableInner($customers);
+        return $customers;
     }
 
     protected function getFieldValue($row, Field $field): string {

@@ -25,15 +25,7 @@ abstract class UserDisplay extends Display {
         $this->pageName = $pageName;
     }
 
-    public abstract function getList();
-
-    public function handleAction(): String {
-        if ($this->action == "list") {
-            return $this->getList();
-        } else {
-            throw new InvalidActionException();
-        }
-    }
+    public abstract function handleAction(): string;
 
     public function createNavbarLink(String $linkPage, String $text) {
         if ($this->pageName == $linkPage) {

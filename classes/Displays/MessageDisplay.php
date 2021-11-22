@@ -4,10 +4,12 @@ namespace SmartSoft\Displays;
 
 require_once("classes/Database.php");
 require_once("classes/User.php");
+require_once("classes/Exceptions/InvalidActionException.php");
 
 use SmartSoft\Database;
 use SmartSoft\User;
 use SmartSoft\Role;
+use SmartSoft\Exceptions\InvalidActionException;
 
 class MessageDisplay extends UserDisplay {
 
@@ -88,7 +90,7 @@ class MessageDisplay extends UserDisplay {
         return $code;
     }
 
-    public function getList() {
+    public function getList(): string {
         if ($this->user->getRole() == Role::Customer) {
             $column = "customer.ID";
         } else {
@@ -172,7 +174,8 @@ class MessageDisplay extends UserDisplay {
         switch ($this->action) {
             case "reply": return $this->getReplyForm();
             case "send": return $this->getSendForm();
-            default: return parent::handleAction();
+            case "list": return $this->getList();
+            default: throw new InvalidActionException();
         }
     }
 }

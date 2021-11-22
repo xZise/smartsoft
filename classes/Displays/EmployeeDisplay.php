@@ -22,14 +22,13 @@ class EmployeeDisplay extends TableDisplay {
         parent::__construct($user, $action, EmployeeType::getInstance());
     }
 
-    public function getList() {
+    protected function getList(): array {
         $db = new Database();
         try {
-            $employees = $db->fetchAll($this->getSQLQuery());
+            return $db->fetchAll($this->getSQLQuery());
         } finally {
             $db = null;
         }
-        return $this->getTableInner($employees);
     }
 
     protected function getFieldValue($row, Field $field): string {

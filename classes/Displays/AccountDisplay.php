@@ -19,7 +19,7 @@ class AccountDisplay extends UserDisplay {
         parent::__construct($user, $action, "account");
     }
 
-    public function getList() {
+    public function handleAction(): string {
         $disabled = HtmlOption::disabled();
         if ($this->user->getRole() == Role::Customer) {
             $db = new Database();

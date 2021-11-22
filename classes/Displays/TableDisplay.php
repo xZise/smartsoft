@@ -8,6 +8,7 @@ require_once("classes/Role.php");
 require_once("classes/User.php");
 require_once("classes/Displays/UserDisplay.php");
 require_once("classes/Exceptions/InsufficientRightsException.php");
+require_once("classes/Exceptions/InvalidActionException.php");
 require_once("classes/Types/BaseType.php");
 require_once("classes/Types/Field.php");
 
@@ -16,6 +17,7 @@ use SmartSoft\HtmlOption;
 use SmartSoft\Role;
 use SmartSoft\User;
 use SmartSoft\Exceptions\InsufficientRightsException;
+use SmartSoft\Exceptions\InvalidActionException;
 use SmartSoft\Types\BaseType;
 use SmartSoft\Types\Field;
 
@@ -31,6 +33,8 @@ abstract class TableDisplay extends UserDisplay {
         $this->canModify = $this->user->getRole() == Role::Administrator;
         $this->nameProperty = $this->properties[1]->getColumn();
     }
+
+    protected abstract function getList(): array;
 
     public function checkRights(): bool {
         return $this->user->getRole() != Role::Customer && ($this->action == "list" || $this->canModify);
@@ -87,7 +91,8 @@ abstract class TableDisplay extends UserDisplay {
         return $htmlCode;
     }
 
-    protected function getTableInner($data) {
+    private function getTable(): string {
+        $data = $this->getList();
         $count = count($data);
         $type = $count == 1 ? $this->getSingular() : $this->getPlural();
         $htmlCode = "<div>$count $type"; 
@@ -127,7 +132,8 @@ abstract class TableDisplay extends UserDisplay {
             case "add": return $this->getAddPage();
             case "edit": return $this->getEditPage();
             case "delete": return $this->getDeletePage();
-            default: return parent::handleAction($this->action);
+            case "list": return $this->getTable();
+            default: throw new InvalidActionException();
         }
     }
 
