@@ -47,7 +47,7 @@ final class User {
         }
     }
 
-    private String $name;
+    private string $name;
     private string $username;
     private int $id;
     private int $role;

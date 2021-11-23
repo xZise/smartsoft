@@ -56,7 +56,7 @@ class CustomerDisplay extends TableDisplay {
         }
         return $value;
     }
-    
+
     /**
      * Queries the database with the given query and creates an select with those items. The query needs to have two
      * columns named ID and Name. The Name column is used for the text of the option, while the ID is used for the
@@ -94,15 +94,15 @@ class CustomerDisplay extends TableDisplay {
         }
     }
 
-    protected function getSQLQuery(): String {
+    protected function getSQLQuery(): string {
         return "SELECT ID, CustomerNo, Username, Contact, Tariff FROM customer";
     }
 
-    protected function getSingular(): String {
+    protected function getSingular(): string {
         return "Kunde";
     }
 
-    protected function getPlural(): String {
+    protected function getPlural(): string {
         return "Kunden";
     }
 

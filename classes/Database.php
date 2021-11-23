@@ -40,7 +40,7 @@ final class Database {
      * @param mixed $params An array of parameters provided to the query.
      * @return array The result set.
      */
-    public function fetchAll(String $query, int $mode = \PDO::FETCH_NAMED, $params = null): array {
+    public function fetchAll(string $query, int $mode = \PDO::FETCH_NAMED, $params = null): array {
         $stmt = $this->getDatabase()->prepare($query);
         $stmt->execute($params);
         return $stmt->fetchAll($mode);

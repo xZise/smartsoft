@@ -12,7 +12,7 @@ require_once("classes/Types/Field.php");
 final class CustomerType extends BaseType {
 
     private static CustomerType $instance;
-    
+
     /** Creates a new instance, it is private as it is a singleton instance. */
     private function __construct() {
         parent::__construct("customer", array(new Field("ID", "ID"), new Field("Benutzername", "Username"), new Field("Kundennummer", "CustomerNo"), new Field("Ansprechpartner", "Contact", "ContactName"), new Field("Tarif", "Tariff", "TariffName")));

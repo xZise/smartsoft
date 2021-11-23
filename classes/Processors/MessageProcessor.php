@@ -45,7 +45,7 @@ class MessageProcessor extends Processor {
         if ($this->user->getRole() != Role::Customer) {
             throw new ProcessActionException();
         }
-        
+
         $db = new Database();
         try {
             $stmt = $db->getDatabase()->prepare("INSERT INTO thread (Customer, Subject) VALUES (?, ?)");
@@ -61,7 +61,7 @@ class MessageProcessor extends Processor {
             $db = null;
         }
     }
-    
+
     /**
      * Handles the reply related actions by adding a message to the table. When the message is from an employee it's ID
      * is used for the sender and null otherwise.

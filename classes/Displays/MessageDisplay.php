@@ -16,7 +16,7 @@ use SmartSoft\Exceptions\InvalidActionException;
  */
 class MessageDisplay extends UserDisplay {
 
-    public function __construct(User $user, String $action) {
+    public function __construct(User $user, string $action) {
         parent::__construct($user, $action, "message");
     }
     
@@ -54,7 +54,7 @@ class MessageDisplay extends UserDisplay {
         $code .= "</div></div>";
         return $code;
     }
-    
+
     /**
      * Creates the HTML code for the threads and messages using the given conditions.
      *
@@ -105,7 +105,7 @@ class MessageDisplay extends UserDisplay {
         $code .= "</div>";
         return $code;
     }
-    
+
     /**
      * Returns the list of all threads and messages corresponding to the current user.
      *
@@ -121,7 +121,7 @@ class MessageDisplay extends UserDisplay {
         return "$code";
     }
 
-    public function getTitle(): String {
+    public function getTitle(): string {
         switch ($this->action) {
             case "reply": return "Antwort verfassen";
             case "send": return "Nachricht verfassen";
@@ -160,7 +160,7 @@ class MessageDisplay extends UserDisplay {
             return false;
         }
     }
-    
+
     /**
      * Returns the HTML code for a message input form. Will include a hidden field with the ID if it is not null and
      * otherwise a field for the subject.
@@ -182,7 +182,12 @@ class MessageDisplay extends UserDisplay {
         return $code;
     }
 
-    private function getReplyForm(): String {
+    /**
+     * Create a message form for a reply to the thread placed above. It is using the ID from the GET-Parameter.
+     *
+     * @return string The HTML code with the thread and a message input form.
+     */
+    private function getReplyForm(): string {
         $id = $_GET["ID"];
         $code = $this->buildMessages("thread.ID", $id);
 
@@ -192,13 +197,18 @@ class MessageDisplay extends UserDisplay {
 
     }
 
-    private function getSendForm(): String {
+    /**
+     * Create a message form for a new thread.
+     *
+     * @return string The HTML code with a message input form.
+     */
+    private function getSendForm(): string {
         $code = $this->getMessageForm(null);
 
         return $code;
     }
 
-    public function handleAction(): String {
+    public function handleAction(): string {
         switch ($this->action) {
             case "reply": return $this->getReplyForm();
             case "send": return $this->getSendForm();

@@ -21,7 +21,7 @@ use SmartSoft\Types\Field;
  */
 class EmployeeDisplay extends TableDisplay {
 
-    public function __construct(User $user, String $action) {
+    public function __construct(User $user, string $action) {
         parent::__construct($user, $action, EmployeeType::getInstance());
     }
 
@@ -50,25 +50,26 @@ class EmployeeDisplay extends TableDisplay {
     protected function generateEdit($row, Field $field): string {
         if ($field->getListColumn() == "Administrator") {
             $value = $field->getRowValue($row);
-            $options = HtmlOption::checked($value > 0) . HtmlOption::disabled($row !== null && $row["ID"] == $this->user->getId());
-            return "<label for=\"{$field->getColumn()}\"><input type=\"checkbox\" name=\"{$field->getColumn()}\" id=\"{$field->getColumn()}\" $options/></label>";
+            $options = HtmlOption::checked($value > 0);
+            $options .= HtmlOption::disabled($row !== null && $row["ID"] == $this->user->getId());
+            return "<input type=\"checkbox\" name=\"{$field->getColumn()}\" id=\"{$field->getColumn()}\" $options/>";
         } else {
             return parent::generateEdit($row, $field);
         }
     }
 
-    protected function getSQLQuery(): String {
+    protected function getSQLQuery(): string {
         return "SELECT ID, Name, Username, Administrator, CASE WHEN IFNULL(ContactCount, 0) + IFNULL(MessageCount, 0) > 0 THEN 1 ELSE 0 END AS Constrained
                 FROM employee
                 LEFT JOIN (SELECT COUNT(*) AS ContactCount, Contact FROM customer GROUP BY Contact) contactCounts ON contactCounts.Contact = employee.ID
                 LEFT JOIN (SELECT COUNT(*) AS MessageCount, Sender FROM message WHERE Sender IS NOT NULL GROUP BY Sender) messageCounts ON messageCounts.Sender = employee.ID";
     }
 
-    protected function getSingular(): String {
+    protected function getSingular(): string {
         return "Mitarbeiter";
     }
 
-    protected function getPlural(): String {
+    protected function getPlural(): string {
         return $this->getSingular();
     }
 
