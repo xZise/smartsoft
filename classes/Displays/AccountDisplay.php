@@ -48,10 +48,13 @@ class AccountDisplay extends UserDisplay {
             $oldPassword = "Kein Passwort festgelegt";
             $oldPasswordType = "text";
         }
+
+        $username = htmlspecialchars($this->user->getUsername());
+
         return "<form action=\"process.php\" method=\"post\" class=\"table\">
                    <label for=\"username\">Benutzername:</label>
                    <input type=\"text\" id=\"username\" name=\"username\"
-                          value=\"{$this->user->getUsername()}\" $disabled />
+                          value=\"{$username}\" $disabled />
                    $contactRow
                    <label for=\"old_password\">Altes Passwort:</label>
                    <input type=\"$oldPasswordType\" id=\"old_password\" name=\"old_password\"

@@ -67,10 +67,23 @@ final class User {
     }
 
     /**
+     * Returns the name of the user, which is the customer number for customers and the name itself for employees. It
+     * is not escaped and should be used with care.
+     *
+     * @return string The plain unescaped name.
+     */
+    public function getPlainName(): string {
+        return $this->name;
+    }
+
+    /**
      * Returns the name of the user, which is the customer number for customers and the name itself for employees.
+     * Special characters have been escaped by using htmlspecialchars.
+     *
+     * @return string The escaped name.
      */
     public function getName(): string {
-        return $this->name;
+        return htmlspecialchars($this->getPlainName());
     }
 
     /**
