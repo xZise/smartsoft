@@ -59,10 +59,20 @@ class EmployeeDisplay extends TableDisplay {
     }
 
     protected function getSQLQuery(): string {
-        return "SELECT ID, Name, Username, Administrator, CASE WHEN IFNULL(ContactCount, 0) + IFNULL(MessageCount, 0) > 0 THEN 1 ELSE 0 END AS Constrained
+        return "SELECT
+                    user.ID,
+                    Name,
+                    Username,
+                    Administrator,
+                    CASE WHEN IFNULL(ContactCount, 0) + IFNULL(MessageCount, 0) > 0 THEN 1 ELSE 0 END AS Constrained
                 FROM employee
-                LEFT JOIN (SELECT COUNT(*) AS ContactCount, Contact FROM customer GROUP BY Contact) contactCounts ON contactCounts.Contact = employee.ID
-                LEFT JOIN (SELECT COUNT(*) AS MessageCount, Sender FROM message WHERE Sender IS NOT NULL GROUP BY Sender) messageCounts ON messageCounts.Sender = employee.ID";
+                JOIN user ON user.ID = employee.ID
+                LEFT JOIN (
+                    SELECT COUNT(*) AS ContactCount, Contact FROM customer GROUP BY Contact
+                    ) contactCounts ON contactCounts.Contact = employee.ID
+                LEFT JOIN (
+                    SELECT COUNT(*) AS MessageCount, Sender FROM message WHERE Sender IS NOT NULL GROUP BY Sender
+                    ) messageCounts ON messageCounts.Sender = employee.ID";
     }
 
     protected function getSingular(): string {

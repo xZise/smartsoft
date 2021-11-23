@@ -40,11 +40,6 @@ class LoginDisplay extends Display {
                 <input type=\"text\" id=\"username\" name=\"username\">
                 <label for=\"password\">Passwort:</label>
                 <input type=\"password\" id=\"password\" name=\"password\">
-                <label for=\"role\">Rolle:</label>
-                <select id=\"role\" name=\"role\">
-                    <option value=\"customer\">Kunde</option>
-                    <option value=\"employee\">Mitarbeiter</option>
-                </select>
                 <input class=\"anim-button bordered\" type=\"submit\" value=\"Anmelden\" />
                 <input type=\"hidden\" name=\"type\" value=\"login\"/>
             </form>

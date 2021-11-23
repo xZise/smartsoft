@@ -165,7 +165,7 @@ abstract class TableDisplay extends UserDisplay {
     protected function getItem(int $id) {
         $db = new Database();
         try {
-            $stmt = $db->getDatabase()->prepare("{$this->getSQLQuery()} WHERE ID = ?");
+            $stmt = $db->getDatabase()->prepare("{$this->getSQLQuery()} WHERE user.ID = ?");
             $stmt->bindParam(1, $id);
             $stmt->execute();
             return $stmt->fetch(\PDO::FETCH_NAMED);

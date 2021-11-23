@@ -36,11 +36,22 @@ class CustomerDisplay extends TableDisplay {
                 $params[] = $this->user->getId();
                 $condition = " WHERE customer.Contact = ?";
             }
-            $customers = $db->fetchAll("SELECT customer.ID, customer.CustomerNo, customer.Username, employee.Name AS ContactName, Tariff, tariff.Name AS TariffName, IFNULL(ThreadCount, 0) AS ThreadCount
+            $customers = $db->fetchAll("SELECT
+                                            customer.ID,
+                                            customer.CustomerNo,
+                                            user.Username,
+                                            employee.Name AS ContactName,
+                                            Tariff,
+                                            tariff.Name AS TariffName,
+                                            IFNULL(ThreadCount, 0) AS ThreadCount
                                         FROM customer
+                                        JOIN user ON user.ID = customer.ID
                                         JOIN employee ON customer.Contact = employee.ID
-                                        LEFT JOIN (SELECT COUNT(*) AS ThreadCount, Customer FROM thread) counts ON counts.Customer = customer.ID
-                                        JOIN tariff ON customer.Tariff = tariff.ID $condition", \PDO::FETCH_NAMED, $params);
+                                        LEFT JOIN (
+                                            SELECT COUNT(*) AS ThreadCount, Customer FROM thread
+                                            ) counts ON counts.Customer = customer.ID
+                                        JOIN tariff ON customer.Tariff = tariff.ID $condition",
+                                        \PDO::FETCH_NAMED, $params);
         } finally {
             $db = null;
         }
@@ -95,7 +106,9 @@ class CustomerDisplay extends TableDisplay {
     }
 
     protected function getSQLQuery(): string {
-        return "SELECT ID, CustomerNo, Username, Contact, Tariff FROM customer";
+        return "SELECT customer.ID, CustomerNo, Username, Contact, Tariff
+                FROM customer
+                JOIN user ON user.ID = customer.ID";
     }
 
     protected function getSingular(): string {

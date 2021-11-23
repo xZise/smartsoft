@@ -22,15 +22,20 @@ final class User {
         }
         $db = new Database();
         try {
-            $isEmployee = LoginState::getLoggedInEmployee();
-            if ($isEmployee) {
-                $result = $db->fetchAll("SELECT Name, Administrator, Username, Password FROM employee WHERE ID = ?", PDO::FETCH_NAMED, array($id));
-            } else {
-                $result = $db->fetchAll("SELECT CustomerNo As Name, Username, Password FROM customer WHERE ID = ?", PDO::FETCH_NAMED, array($id));
-            }
+            $result = $db->fetchAll("SELECT
+                                        IFNULL(customer.CustomerNo, employee.Name) AS Name,
+                                        employee.ID AS EmployeeID,
+                                        IFNULL(employee.Administrator, 0) AS Administrator,
+                                        user.Username,
+                                        user.Password
+                                     FROM user
+                                     LEFT JOIN customer ON customer.ID = user.ID
+                                     LEFT JOIN employee ON employee.ID = user.ID
+                                     WHERE user.ID = ?", PDO::FETCH_NAMED, array($id));
             if (count($result) == 1) {
-                if ($isEmployee) {
-                    if ($result[0]["Administrator"]) {
+                $result = $result[0];
+                if ($result["EmployeeID"] !== null) {
+                    if ($result["Administrator"]) {
                         $role = Role::Administrator;
                     } else {
                         $role = Role::Employee;
@@ -38,7 +43,7 @@ final class User {
                 } else {
                     $role = Role::Customer;
                 }
-                return new User($result[0]["Name"], $result[0]["Username"], $id, $role, $result[0]["Password"] !== null);
+                return new User($result["Name"], $result["Username"], $id, $role, $result["Password"] !== null);
             } else {
                 return null;
             }

@@ -26,7 +26,8 @@ abstract class TableProcessor extends Processor {
         $this->baseType = $baseType;
         $this->fields = array();
         foreach ($this->baseType->getFields() as $field) {
-            if ($field->getColumn() !== "ID") {
+            if ($field->getColumn() !== "ID" &&
+                    $field->getColumn() !== "Username" && $field->getColumn() !== "Password") {
                 $this->fields[] = $field->getColumn();
             }
         }
@@ -68,10 +69,17 @@ abstract class TableProcessor extends Processor {
     }
 
     public function processAddAction() {
-        $sql = "INSERT INTO {$this->baseType->getTypeName()} (" . implode(", ", $this->fields) . ") VALUES (" . implode(", ", array_fill(0, count($this->fields), "?")) . ")";
-        
+        /* First insert into `user` to get ID and then insert that into the type-related table. */
+
         $db = new Database();
         try {
+            $stmt = $db->getDatabase()->prepare("INSERT INTO user (Username, Password) VALUES (?, NULL)");
+            $stmt->bindValue(1, $_POST["Username"]);
+            $stmt->execute();
+
+            $sql = "INSERT INTO {$this->baseType->getTypeName()} (ID, " . implode(", ", $this->fields) . ")
+                    VALUES (LAST_INSERT_ID(), " . implode(", ", array_fill(0, count($this->fields), "?")) . ")";
+
             $stmt = $db->getDatabase()->prepare($sql);
             $this->bindParams($stmt);
             $stmt->execute();
@@ -81,6 +89,8 @@ abstract class TableProcessor extends Processor {
     }
 
     public function processEditAction(int $id) {
+        /* Update both `user` and the type-related table. */
+
         $sql = "UPDATE {$this->baseType->getTypeName()} SET ";
         foreach ($this->fields as $idx => $column) {
             if ($idx > 0) {
@@ -91,6 +101,11 @@ abstract class TableProcessor extends Processor {
         $sql .= " WHERE ID = ?";
         $db = new Database();
         try {
+            $stmt = $db->getDatabase()->prepare("UPDATE user SET Username = ? WHERE ID = ?");
+            $stmt->bindValue(1, $_POST["Username"]);
+            $stmt->bindValue(2, $id);
+            $stmt->execute();
+
             $stmt = $db->getDatabase()->prepare($sql);
             $this->bindParams($stmt);
             $stmt->bindParam(count($this->fields) + 1, $id);
@@ -101,7 +116,7 @@ abstract class TableProcessor extends Processor {
     }
 
     public function processDeleteAction(int $id) {
-        $sql = "DELETE FROM {$this->baseType->getTypeName()} WHERE ID = ?";
+        $sql = "DELETE FROM user WHERE ID = ?";
         $db = new Database();
         try {
             $stmt = $db->getDatabase()->prepare($sql);

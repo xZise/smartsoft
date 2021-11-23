@@ -32,15 +32,10 @@ class AccountProcessor extends Processor {
             throw new ProcessActionException();
         }
 
-        if ($this->user->getRole() == Role::Customer) {
-            $table = "customer";
-        } else {
-            $table = "employee";
-        }
         $hash = password_hash($newPassword, PASSWORD_DEFAULT);
         $db = new Database();
         try {
-            $stmt = $db->getDatabase()->prepare("UPDATE $table SET Password = ? WHERE ID = ?");
+            $stmt = $db->getDatabase()->prepare("UPDATE user SET Password = ? WHERE ID = ?");
             $stmt->bindValue(1, $hash);
             $stmt->bindValue(2, $this->user->getId());
             $stmt->execute();

@@ -51,7 +51,6 @@ final class LoginState {
         $_SESSION["state"] = $state;
         if ($state != LoginState::LoggedIn) {
             unset($_SESSION["loginId"]);
-            unset($_SESSION["loginEmployee"]);
         }
     }
 
@@ -72,9 +71,8 @@ final class LoginState {
      * @param int $id The id of the logged in user.
      * @param bool $employee Whether this user is an employee.
      */
-    public static function setLoggedIn(int $id, bool $employee) {
+    public static function setLoggedIn(int $id) {
         $_SESSION["loginId"] = $id;
-        $_SESSION["loginEmployee"] = $employee;
     }
 
     /**
@@ -88,14 +86,5 @@ final class LoginState {
         } else {
             return -1;
         }
-    }
-
-    /**
-     * Returns whether the logged in user is an employee.
-     *
-     * @return bool Whether the logged in user is an employee.
-     */
-    public static function getLoggedInEmployee(): bool {
-        return isset($_SESSION["loginEmployee"]) && $_SESSION["loginEmployee"];
     }
 }
