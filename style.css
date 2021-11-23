@@ -182,6 +182,11 @@ form.table input[type="checkbox"] {
     justify-self: start;
 }
 
+/* The customer number is 12 characters long and so monospace seems sensible. */
+form.table #CustomerNo {
+    font-family: monospace;
+}
+
 div.thread:nth-child(even) {
     --bg-color: var(--accent-color);
     --text-color: var(--accent-text-color);

@@ -5,6 +5,7 @@ namespace SmartSoft\Displays;
 require_once("classes/Database.php");
 require_once("classes/HtmlOption.php");
 require_once("classes/User.php");
+require_once("classes/Displays/InputField.php");
 require_once("classes/Displays/TableDisplay.php");
 require_once("classes/Types/CustomerType.php");
 require_once("classes/Types/Field.php");
@@ -94,14 +95,19 @@ class CustomerDisplay extends TableDisplay {
         return $code;
     }
 
-    public function generateEdit($row, Field $field): string {
+    public function generateEdit($row, Field $field): string|FormField {
         $value = $field->getRowValue($row);
         if ($field->getColumn() == "Contact") {
             return $this->generateOption($field->getColumn(), "SELECT ID, Name FROM employee ORDER BY Name", $value);
         } elseif ($field->getColumn() == "Tariff") {
             return $this->generateOption($field->getColumn(), "SELECT ID, Name FROM tariff ORDER BY ID", $value);
         } else {
-            return parent::generateEdit($row, $field);
+            $formField = parent::generateEdit($row, $field);
+            if ($field->getColumn() == "CustomerNo" && $formField instanceof InputField) {
+                $formField->setAttribute("minlength", "12");
+                $formField->setAttribute("maxlength", "12");
+            }
+            return $formField;
         }
     }
 

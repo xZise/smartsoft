@@ -4,6 +4,7 @@ namespace SmartSoft\Displays;
 
 require_once("classes/Database.php");
 require_once("classes/User.php");
+require_once("classes/Displays/InputField.php");
 require_once("classes/Displays/TableDisplay.php");
 require_once("classes/Types/EmployeeType.php");
 require_once("classes/Types/Field.php");
@@ -47,15 +48,15 @@ class EmployeeDisplay extends TableDisplay {
         }
     }
 
-    protected function generateEdit($row, Field $field): string {
-        if ($field->getListColumn() == "Administrator") {
+    protected function generateEdit($row, Field $field): string|FormField {
+        $formField = parent::generateEdit($row, $field);
+        if ($field->getListColumn() == "Administrator" && $formField instanceof InputField) {
             $value = $field->getRowValue($row);
-            $options = HtmlOption::checked($value > 0);
-            $options .= HtmlOption::disabled($row !== null && $row["ID"] == $this->user->getId());
-            return "<input type=\"checkbox\" name=\"{$field->getColumn()}\" id=\"{$field->getColumn()}\" $options/>";
-        } else {
-            return parent::generateEdit($row, $field);
+            $formField->setAttribute("type", "checkbox");
+            $formField->setOption("checked", $value > 0);
+            $formField->setOption("disabled", $row !== null && $row["ID"] == $this->user->getId());
         }
+        return $formField;
     }
 
     protected function getSQLQuery(): string {

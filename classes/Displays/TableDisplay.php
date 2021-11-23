@@ -7,6 +7,7 @@ require_once("classes/HtmlOption.php");
 require_once("classes/Role.php");
 require_once("classes/User.php");
 require_once("classes/Displays/UserDisplay.php");
+require_once("classes/Displays/InputField.php");
 require_once("classes/Exceptions/InsufficientRightsException.php");
 require_once("classes/Exceptions/InvalidActionException.php");
 require_once("classes/Types/BaseType.php");
@@ -33,7 +34,7 @@ abstract class TableDisplay extends UserDisplay {
         $this->canModify = $this->user->getRole() == Role::Administrator;
         $this->nameProperty = $this->properties[1]->getColumn();
     }
-    
+
     /**
      * Returns the list described by this display.
      *
@@ -44,7 +45,7 @@ abstract class TableDisplay extends UserDisplay {
     public function checkRights(): bool {
         return $this->user->getRole() != Role::Customer && ($this->action == "list" || $this->canModify);
     }
-    
+
     /**
      * Throws InsufficientRightsException, when the user cannot modify data.
      */
@@ -53,7 +54,7 @@ abstract class TableDisplay extends UserDisplay {
             throw new InsufficientRightsException();
         }
     }
-    
+
     /**
      * Generate HTML for an input for the given field and with the given data. This uses a textfield with the name and
      * id set to $field->getColumn().
@@ -62,9 +63,14 @@ abstract class TableDisplay extends UserDisplay {
      * @param Field $field The field this edit should correspond to.
      * @return string The HTML code for the given field.
      */
-    protected function generateEdit(?array $row, Field $field): string {
+    protected function generateEdit(?array $row, Field $field): string|FormField {
         $value = $row == null ? "" : $field->getRowValue($row);
-        return "<input type=\"text\" name=\"{$field->getColumn()}\" id=\"{$field->getColumn()}\" value=\"$value\" />";
+        $formField = new InputField($field->getColumn());
+        $formField->setAttribute("value", $value);
+        if ($field->getColumn() === "Username") {
+            $formField->setAttribute("maxlength", 100);
+        }
+        return $formField;
     }
 
     private function createEditForm($item) {
@@ -77,7 +83,11 @@ abstract class TableDisplay extends UserDisplay {
                 }
             } else {
                 $htmlCode .= "<label for=\"{$field->getColumn()}\">{$field->getDescription()}:</label>";
-                $htmlCode .= $this->generateEdit($item, $field);
+                $formField = $this->generateEdit($item, $field);
+                if ($formField instanceof FormField) {
+                    $formField = $formField->generateHtml();
+                }
+                $htmlCode .= $formField;
             }
         }
         $htmlCode .= "<input type=\"submit\" class=\"anim-button bordered\"></form>";
