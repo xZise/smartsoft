@@ -111,10 +111,46 @@ class CustomerDisplay extends TableDisplay {
         }
     }
 
+    protected function getDeleteMessage($item): string {
+        $message = "<p>" . parent::getDeleteMessage($item) . "</p>";
+
+        if ($item["MessageCount"] == 1) {
+            $messageCount = "einer Nachricht";
+        } else {
+            $messageCount = "{$item["MessageCount"]} Nachrichten";
+        }
+        if ($item["ThreadCount"] == 1) {
+            $message .= "<p>Es wird damit auch das Gespräch mit $messageCount gelöscht</p>";
+        } elseif ($item["ThreadCount"] > 1) {
+            $message .= "<p>Es werden damit auch {$item["ThreadCount"]} Gespräche mit $messageCount gelöscht</p>";
+        }
+        return $message;
+    }
+
     protected function getSQLQuery(): string {
-        return "SELECT customer.ID, CustomerNo, Username, Contact, Tariff
+        return "SELECT
+                    customer.ID,
+                    customer.CustomerNo,
+                    customer.Contact,
+                    user.Username,
+                    employee.Name AS ContactName,
+                    Tariff,
+                    tariff.Name AS TariffName,
+                    IFNULL(ThreadCount, 0) AS ThreadCount,
+                    IFNULL(MessageCount, 0) AS MessageCount
                 FROM customer
-                JOIN user ON user.ID = customer.ID";
+                JOIN user ON user.ID = customer.ID
+                JOIN employee ON customer.Contact = employee.ID
+                LEFT JOIN (
+                    SELECT
+                        COUNT(*) As MessageCount,
+                        COUNT(DISTINCT(thread.ID)) As ThreadCount,
+                        thread.Customer
+                    FROM thread
+                    JOIN message ON message.Thread = thread.ID
+                    GROUP BY thread.Customer
+                    ) counts ON counts.Customer = customer.ID
+                JOIN tariff ON customer.Tariff = tariff.ID";
     }
 
     protected function getSingular(): string {
@@ -126,6 +162,6 @@ class CustomerDisplay extends TableDisplay {
     }
 
     protected function canDelete($row): bool {
-        return $row["ThreadCount"] === 0;
+        return true;
     }
 }

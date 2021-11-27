@@ -108,20 +108,31 @@ abstract class TableDisplay extends UserDisplay {
         return $this->createEditForm($item);
     }
 
-    protected function getDeletePage() {
+    private function getDeletePage() {
         $this->checkModify();
 
         $item = $this->getQueryItem(false);
 
-        $htmlCode = "Soll {$item[$this->nameProperty]} wirklich gelöscht werden? <form method=\"POST\" action=\"process.php\"><input type=\"hidden\" name=\"page\" value=\"{$this->pageName}\" /><input type=\"hidden\" name=\"ID\" value=\"$item[ID]\" /><button name=\"action\" value=\"delete\">Löschen bestätigen</button></form>";
+        $message = $this->getDeleteMessage($item);
+
+        $htmlCode = "$message
+                     <form method=\"POST\" action=\"process.php\">
+                        <input type=\"hidden\" name=\"page\" value=\"{$this->pageName}\" />
+                        <input type=\"hidden\" name=\"ID\" value=\"$item[ID]\" />
+                        <button name=\"action\" value=\"delete\">Löschen bestätigen</button>
+                     </form>";
         return $htmlCode;
+    }
+
+    protected function getDeleteMessage($item): string {
+        return "Soll {$item[$this->nameProperty]} wirklich gelöscht werden?";
     }
 
     private function getTable(): string {
         $data = $this->getList();
         $count = count($data);
         $type = $count == 1 ? $this->getSingular() : $this->getPlural();
-        $htmlCode = "<div>$count $type"; 
+        $htmlCode = "<div>$count $type";
         if ($this->canModify) {
             $htmlCode .= "<form class=\"addnew\"><input type=\"hidden\" name=\"action\" value=\"add\" /><button name=\"page\" value=\"{$this->pageName}\" type=\"submit\" class=\"anim-button bordered\">Neu anlegen</button></form>";
         }
