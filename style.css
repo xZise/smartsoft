@@ -247,10 +247,6 @@ div.header-container>div:first-child {
     /* flex-direction: column; */
 }
 
-div.tariff {
-    white-space: nowrap;
-}
-
 div.thread>div:first-child {
     margin-left: 0;
 }
@@ -395,4 +391,12 @@ div.anim-button button {
     height: 100%;
     cursor: pointer;
     color: inherit;
+}
+
+.tariff-level {
+    white-space: nowrap;
+}
+
+.tariff-level span:not(:first-child) {
+    margin-left: -0.7em;
 }

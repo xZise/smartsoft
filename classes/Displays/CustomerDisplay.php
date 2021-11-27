@@ -63,8 +63,8 @@ class CustomerDisplay extends TableDisplay {
         $value = parent::getFieldValue($row, $field);
         if ($field->getColumn() == "Tariff") {
             $tariff = $field->getRowValue($row);
-            $value .= " " . str_repeat("🪙 ", $tariff);
-            $value = "<span style=\"white-space: nowrap;\">$value</span>";
+            $tokens = " " . str_repeat("<span>🪙</span>", $tariff);
+            $value = "$value <span class=\"tariff-level\">$tokens</span>";
         }
         return $value;
     }

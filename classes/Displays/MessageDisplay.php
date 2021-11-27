@@ -19,7 +19,7 @@ class MessageDisplay extends UserDisplay {
     public function __construct(User $user, string $action) {
         parent::__construct($user, $action, "message");
     }
-    
+
     /**
      * Creates the HTML code for one thread.
      *
@@ -27,18 +27,18 @@ class MessageDisplay extends UserDisplay {
      * @return string The HTML code.
      */
     private function buildMessage($completeThread): string {
-        $tariffText = str_repeat("🪙 ", $completeThread["Tariff"]);
+        $tariffText = str_repeat("<span>🪙</span>", $completeThread["Tariff"]);
 
         $subject = htmlspecialchars($completeThread["Subject"]);
-        
+
         setlocale(LC_TIME, "de_DE");
         $code = "<div class=\"thread header-container\">
                     <div>
                       <div class=\"subject\">Betreff: $subject</div>
-                      <div class=\"tariff\">$tariffText</div>
+                      <div class=\"tariff-level\">$tariffText</div>
                       <div class=\"actions\"><form class=\"message\"><input type=\"hidden\" name=\"page\" value=\"{$this->pageName}\" /><input type=\"hidden\" name=\"ID\" value=\"$completeThread[ID]\" /><button name=\"action\" value=\"reply\" class=\"anim-button bordered\"><img src=\"img/msg-reply.png\" /><span>Antworten</span></button></form></div>
                     </div><div class=\"content\">";
-        
+
         foreach ($completeThread["Messages"] as $message) {
             $sender = htmlspecialchars($message["Sender"]);
             $text = htmlspecialchars($message["Text"]);
