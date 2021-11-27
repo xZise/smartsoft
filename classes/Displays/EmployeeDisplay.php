@@ -53,6 +53,7 @@ class EmployeeDisplay extends TableDisplay {
         if ($field->getListColumn() == "Administrator" && $formField instanceof InputField) {
             $value = $field->getRowValue($row);
             $formField->setAttribute("type", "checkbox");
+            $formField->removeAttribute("value");
             $formField->setOption("checked", $value > 0);
             $formField->setOption("disabled", $row !== null && $row["ID"] == $this->user->getId());
         }
