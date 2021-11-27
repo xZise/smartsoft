@@ -356,6 +356,14 @@ div.thread .anim-button {
     --end-text-color: var(--main-color);
 }
 
+.code {
+    color: var(--main-text-color);
+    background: hsl(0,0%,30%);
+    font-family: var(--mono-text-font);
+    padding: 0.25em;
+    white-space: nowrap;
+}
+
 /* Navigation Handling */
 
 nav {

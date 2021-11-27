@@ -7,12 +7,14 @@ require_once("classes/Role.php");
 require_once("classes/User.php");
 
 require_once("classes/Exceptions/ProcessActionException.php");
+require_once("classes/Exceptions/InvalidParameterException.php");
 require_once("classes/Processors/Processor.php");
 
 use SmartSoft\Database;
 use SmartSoft\Role;
 use SmartSoft\User;
 use SmartSoft\Exceptions\ProcessActionException;
+use SmartSoft\Exceptions\InvalidParameterException;
 
 /**
  * The processor handling sending messages, using a new thread or an already existing one.
@@ -33,7 +35,7 @@ class MessageProcessor extends Processor {
         switch ($action) {
             case "send": return $this->processSendAction();
             case "reply": return $this->processReplyAction();
-            default: throw new ProcessActionException();
+            default: throw new InvalidParameterException(InvalidParameterException::PARAM_ACTION);
         }
     }
 
@@ -43,7 +45,7 @@ class MessageProcessor extends Processor {
      */
     private function processSendAction() {
         if ($this->user->getRole() != Role::Customer) {
-            throw new ProcessActionException();
+            throw new ProcessActionException(ProcessActionException::MISSING_PERMISSION);
         }
 
         $db = new Database();

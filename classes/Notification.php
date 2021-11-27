@@ -48,6 +48,11 @@ final class Notification {
      * a div with the class "notifications". If the array is empty it just returns an empty string.
      */
     public static function createNotificationBox(array $notifications): string {
+        if (isset($_SESSION["processException"])) {
+            $exception = $_SESSION["processException"];
+            $notifications[] = new Notification($exception, true);
+            unset($_SESSION["processException"]);
+        }
         if ($notifications) {
             $code = '<div class="notifications">';
             foreach ($notifications as $notification) {

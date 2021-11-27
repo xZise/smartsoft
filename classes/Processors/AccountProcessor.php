@@ -29,7 +29,7 @@ class AccountProcessor extends Processor {
     protected function processAction(string $action) {
         $newPassword = $_POST["new_password"] ?? "";
         if ($newPassword === "" || $newPassword !== $_POST["new_password_repeat"]) {
-            throw new ProcessActionException();
+            throw new ProcessActionException("Passwörter stimmen nicht überein");
         }
 
         $hash = password_hash($newPassword, PASSWORD_DEFAULT);

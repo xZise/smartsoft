@@ -6,6 +6,7 @@ require_once("classes/Database.php");
 require_once("classes/Role.php");
 require_once("classes/User.php");
 require_once("classes/Exceptions/ProcessActionException.php");
+require_once("classes/Exceptions/InvalidParameterException.php");
 require_once("classes/Processors/Processor.php");
 require_once("classes/Types/BaseType.php");
 
@@ -13,6 +14,7 @@ use SmartSoft\Database;
 use SmartSoft\Role;
 use SmartSoft\User;
 use SmartSoft\Exceptions\ProcessActionException;
+use SmartSoft\Exceptions\InvalidParameterException;
 use SmartSoft\Types\BaseType;
 
 abstract class TableProcessor extends Processor {
@@ -36,14 +38,14 @@ abstract class TableProcessor extends Processor {
 
     protected function processAction(string $action) {
         if ($this->user->getRole() != Role::Administrator) {
-            throw new ProcessActionException();
+            throw new ProcessActionException(ProcessActionException::MISSING_PERMISSION);
         }
 
         if ($action != "add") {
             if (isset($_POST["ID"])) {
                 $id = $_POST["ID"];
             } else {
-                throw new ProcessActionException();
+                throw new InvalidParameterException("ID");
             }
 
             if ($action == "edit") {
@@ -51,7 +53,7 @@ abstract class TableProcessor extends Processor {
             } elseif ($action == "delete") {
                 $this->processDeleteAction($id);
             } else {
-                throw new ProcessActionException();
+                throw new InvalidParameterException(InvalidParameterException::PARAM_ACTION);
             }
         } else {
             $this->processAddAction();
