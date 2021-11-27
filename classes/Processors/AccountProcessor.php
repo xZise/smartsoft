@@ -43,4 +43,8 @@ class AccountProcessor extends Processor {
             $db = null;
         }
     }
+
+    protected function getRedirectAction(): string {
+        return "";
+    }
 }

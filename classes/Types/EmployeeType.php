@@ -28,4 +28,19 @@ final class EmployeeType extends BaseType {
         return static::$instance;
     }
 
+    /**
+     * Returns the parsed value for the column. In case the column is Administrator, it would return whether the value
+     * is on. Otherwise it'll call the original method.
+     *
+     * @param string $column The column for which the value should be determined.
+     * @return mixed The value from the POST request.
+     */
+    protected function getValue(string $column, array $params): mixed {
+        if ($column === "Administrator") {
+            return $params[$column] == "on";
+        } else {
+            return parent::getValue($column, $params);
+        }
+    }
+
 }

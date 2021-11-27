@@ -1,16 +1,19 @@
 <?php
-
-namespace SmartSoft\Processors;
-
-use SmartSoft\Exceptions\ProcessActionException;
-use SmartSoft\Exceptions\InvalidParameterException;
-
 /**
  * This file is called every time some change to the database needs to be executed. It'll select the appropriate
  * processor depending on the selected page and then handles the given action. Unknown pages lead to unsupported
  * behavior.
  */
 
+namespace SmartSoft\Processors;
+
+use SmartSoft\Database;
+
+use SmartSoft\Exceptions\ProcessActionException;
+use SmartSoft\Exceptions\InvalidParameterException;
+use SmartSoft\LoginState;
+
+require_once("classes/Database.php");
 require_once("classes/LoginState.php");
 
 require_once("classes/Exceptions/ProcessActionException.php");
@@ -19,18 +22,33 @@ require_once("classes/Exceptions/InvalidParameterException.php");
 require_once("classes/Processors/AccountProcessor.php");
 require_once("classes/Processors/EmployeeProcessor.php");
 require_once("classes/Processors/CustomerProcessor.php");
+require_once("classes/Processors/InstallProcessor.php");
 require_once("classes/Processors/MessageProcessor.php");
 
 session_start();
 
-\SmartSoft\LoginState::checkLoggedIn();
-
 try {
     unset($_SESSION["processException"]);
-    if (isset($_POST["page"])) {
-        $page = $_POST["page"];
-        $action = $_POST["action"] ?? "";
 
+    $page = $_POST["page"];
+    $action = $_POST["action"] ?? "";
+
+    $db = new Database(false);
+    try {
+        $installed = $db->checkInstalled();
+    } finally {
+        $db = null;
+    }
+
+    if (!$installed) {
+        if ($page == "install") {
+            $processor = new InstallProcessor();
+        } else {
+            throw new InvalidParameterException(InvalidParameterException::PARAM_PAGE);
+        }
+    } elseif (LoginState::getState() != LoginState::LoggedIn) {
+        throw new ProcessActionException(ProcessActionException::MISSING_PERMISSION);
+    } else {
         // TODO: Check whether action is valid
 
         switch ($page) {
@@ -49,11 +67,9 @@ try {
             default:
                 throw new InvalidParameterException(InvalidParameterException::PARAM_PAGE);
         }
-
-        $processor->process($action);
-    } else {
-        throw new InvalidParameterException(InvalidParameterException::PARAM_PAGE);
     }
+
+    $processor->process($action);
 } catch (ProcessActionException $e) {
     $_SESSION["processException"] = $e->getHtmlCode();
     header("Location: " . dirname($_SERVER['REQUEST_URI']));

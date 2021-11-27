@@ -6,7 +6,6 @@ namespace SmartSoft\Exceptions;
  */
 class ProcessActionException extends \Exception {
 
-    const INVALID_PAGE = 'Ungültiger Parameter <span class="code">page</span>';
     const MISSING_PERMISSION = 'Der Nutzer ist nicht berechtigt';
 
     private string $description;

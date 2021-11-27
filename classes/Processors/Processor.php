@@ -20,6 +20,14 @@ abstract class Processor {
         $this->page = $page;
     }
 
+    protected function getRedirectPage(): string {
+        return $this->page;
+    }
+
+    protected function getRedirectAction(): string {
+        return "list";
+    }
+
     /**
      * Executes the handler for the given action and creates an redirect to the previous list.
      *
@@ -30,10 +38,18 @@ abstract class Processor {
         try {
             $this->processAction($action);
         } catch (ProcessActionException $e) {
-
+            $_SESSION["processException"] = $e->getHtmlCode();
         }
 
-        $params = array("page" => $this->page, "action" => "list");
+        $params = array();
+        $redirectPage = $this->getRedirectPage();
+        if ($redirectPage !== "") {
+            $params["page"] = $redirectPage;
+        }
+        $redirectAction = $this->getRedirectAction();
+        if ($redirectAction !== "") {
+            $params["action"] = $redirectAction;
+        }
 
         $paramsText = "";
         foreach ($params as $name => $value) {

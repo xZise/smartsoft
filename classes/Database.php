@@ -7,14 +7,19 @@ namespace SmartSoft;
  */
 final class Database {
 
+    public const DATABASE_NAME = "smartsoft";
+
     private ?\PDO $database;
 
     /**
      * Creates a new instance with a connection set up.
+     *
+     * @param bool $database Whether it should connect to the actual database.
      */
-    public function __construct() {
+    public function __construct(bool $database = true) {
         $user = "root";
-        $this->database = new \PDO('mysql:host=localhost;dbname=smartsoft;charset=utf8mb4', $user);
+        $dbname = $database ? "dbname=" . Database::DATABASE_NAME . ";" : "";
+        $this->database = new \PDO("mysql:host=localhost;{$dbname}charset=utf8mb4", $user);
         $this->database->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
     }
 
@@ -23,6 +28,18 @@ final class Database {
      */
     public function __destruct() {
         $this->database = null;
+    }
+
+    /**
+     * Returns whether the database exists.
+     *
+     * @return bool Whether the database exists.
+     */
+    public function checkInstalled(): bool {
+        $numberOfDatabases = $this->fetchValue("SELECT COUNT(*)
+                                                FROM INFORMATION_SCHEMA.SCHEMATA
+                                                WHERE SCHEMA_NAME = '" . Database::DATABASE_NAME . "'");
+        return $numberOfDatabases > 0;
     }
 
     /**
@@ -45,7 +62,7 @@ final class Database {
         $stmt->execute($params);
         return $stmt->fetchAll($mode);
     }
-    
+
     /**
      * Fetches a single value. When the query returns multiple rows only the first row will be evaluated. It'll always
      * return the value from the first column.

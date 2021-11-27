@@ -20,19 +20,11 @@ use SmartSoft\Types\BaseType;
 abstract class TableProcessor extends Processor {
 
     private BaseType $baseType;
-    private array $fields;
-    private User $user;
+    private ?User $user;
 
     public function __construct(BaseType $baseType) {
         parent::__construct($baseType->getTypeName());
         $this->baseType = $baseType;
-        $this->fields = array();
-        foreach ($this->baseType->getFields() as $field) {
-            if ($field->getColumn() !== "ID" &&
-                    $field->getColumn() !== "Username" && $field->getColumn() !== "Password") {
-                $this->fields[] = $field->getColumn();
-            }
-        }
         $this->user = User::create();
     }
 
@@ -60,47 +52,29 @@ abstract class TableProcessor extends Processor {
         }
     }
 
-    protected function getValue(string $column): mixed {
-        return $_POST[$column];
-    }
-
-    private function bindParams(\PDOStatement $stmt) {
-        foreach ($this->fields as $idx => $column) {
-            $stmt->bindValue($idx + 1, $this->getValue($column));
-        }
-    }
-
-    public function processAddAction() {
-        /* First insert into `user` to get ID and then insert that into the type-related table. */
-
+    /**
+     * Inserts a new user into the databases. Uses insertUser() with $_POST for the parameters.
+     */
+    private function processAddAction(): void {
         $db = new Database();
         try {
-            $stmt = $db->getDatabase()->prepare("INSERT INTO user (Username, Password) VALUES (?, NULL)");
-            $stmt->bindValue(1, $_POST["Username"]);
-            $stmt->execute();
-
-            $sql = "INSERT INTO {$this->baseType->getTypeName()} (ID, " . implode(", ", $this->fields) . ")
-                    VALUES (LAST_INSERT_ID(), " . implode(", ", array_fill(0, count($this->fields), "?")) . ")";
-
-            $stmt = $db->getDatabase()->prepare($sql);
-            $this->bindParams($stmt);
-            $stmt->execute();
+            $this->baseType->insertUser($db, $_POST);
         } finally {
             $db = null;
         }
     }
 
-    public function processEditAction(int $id) {
+    private function processEditAction(int $id): void {
         /* Update both `user` and the type-related table. */
 
         $sql = "UPDATE {$this->baseType->getTypeName()} SET ";
-        foreach ($this->fields as $idx => $column) {
+        foreach ($this->baseType->getColumns() as $idx => $column) {
             if ($idx > 0) {
                 $sql .= ", ";
             }
-            $sql .= "$column = ?";
+            $sql .= "$column = :$column";
         }
-        $sql .= " WHERE ID = ?";
+        $sql .= " WHERE ID = :id";
         $db = new Database();
         try {
             $stmt = $db->getDatabase()->prepare("UPDATE user SET Username = ? WHERE ID = ?");
@@ -109,15 +83,15 @@ abstract class TableProcessor extends Processor {
             $stmt->execute();
 
             $stmt = $db->getDatabase()->prepare($sql);
-            $this->bindParams($stmt);
-            $stmt->bindParam(count($this->fields) + 1, $id);
+            $this->baseType->bindParams($stmt, $_POST);
+            $stmt->bindParam(":id", $id);
             $stmt->execute();
         } finally {
             $db = null;
         }
     }
 
-    public function processDeleteAction(int $id) {
+    private function processDeleteAction(int $id): void {
         $sql = "DELETE FROM user WHERE ID = ?";
         $db = new Database();
         try {

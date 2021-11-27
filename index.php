@@ -10,57 +10,73 @@
     session_start();
 
     require_once("classes/User.php");
+    require_once("classes/Database.php");
 
     require_once("classes/Displays/AccountDisplay.php");
     require_once("classes/Displays/CustomerDisplay.php");
     require_once("classes/Displays/MessageDisplay.php");
     require_once("classes/Displays/EmployeeDisplay.php");
+    require_once("classes/Displays/InstallDisplay.php");
     require_once("classes/Displays/LoginDisplay.php");
 
     use SmartSoft\Displays;
+    use SmartSoft\Database;
 
-    $user = User::create();
-    if ($user === null) {
-        $display = new Displays\LoginDisplay();
+    $db = new Database(false);
+    try {
+        $isInstalled = $db->checkInstalled();
+    } finally {
+        $db = null;
+    }
+
+    if (!$isInstalled) {
+        $display = new Displays\InstallDisplay();
         $validRights = true;
         $validPage = true;
     } else {
-        if (isset($_GET["action"])) {
-            $action = $_GET["action"];
+        $user = User::create();
+        if ($user === null) {
+            $display = new Displays\LoginDisplay();
+            $validRights = true;
+            $validPage = true;
         } else {
-            $action = "list";
-        }
+            if (isset($_GET["action"])) {
+                $action = $_GET["action"];
+            } else {
+                $action = "list";
+            }
 
-        if (isset($_GET["page"])) {
-            $page = $_GET["page"];
-        } else {
-            $page = "message";
-        }
+            if (isset($_GET["page"])) {
+                $page = $_GET["page"];
+            } else {
+                $page = "message";
+            }
 
-        $validPage = true;
-        switch ($page) {
-            case "account":
-                $display = new Displays\AccountDisplay($user, $action);
-                break;
-            case "employee":
-                $display = new Displays\EmployeeDisplay($user, $action);
-                break;
-            case "customer":
-                $display = new Displays\CustomerDisplay($user, $action);
-                break;
-            default:
-                $validPage = false;
-            case "message":
-                $display = new Displays\MessageDisplay($user, $action);
-                break;
-        }
+            $validPage = true;
+            switch ($page) {
+                case "account":
+                    $display = new Displays\AccountDisplay($user, $action);
+                    break;
+                case "employee":
+                    $display = new Displays\EmployeeDisplay($user, $action);
+                    break;
+                case "customer":
+                    $display = new Displays\CustomerDisplay($user, $action);
+                    break;
+                default:
+                    $validPage = false;
+                case "message":
+                    $display = new Displays\MessageDisplay($user, $action);
+                    break;
+            }
 
-        $validRights = $display->checkRights();
+            $validRights = $display->checkRights();
 
-        if (!$validRights || !$validPage) {
-            $display = new Displays\MessageDisplay($user, "list");
-            if (!$display->checkRights()) {
-                $validRights = false;
+            if (!$validRights || !$validPage) {
+                $display = new Displays\MessageDisplay($user, "list");
+                if (!$display->checkRights()) {
+                    $validRights = false;
+                }
             }
         }
     }
