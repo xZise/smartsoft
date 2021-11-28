@@ -246,6 +246,12 @@ form.message button img {
     height: 1.5em;
 }
 
+/* The text field should only grow vertically and have a minimum height. */
+form.message textarea {
+    resize: vertical;
+    min-height: 5em;
+}
+
 div.thread form.message>* {
     margin-top: unset;
     margin-bottom: unset;
