@@ -433,10 +433,20 @@ div.anim-button button {
     color: inherit;
 }
 
+/* The tariff-tokens shouldn't wrap and have a specific background color (to avoid having yellow on yellow). */
 .tariff-level {
     white-space: nowrap;
+    background: var(--main-color);
+    padding: 3px 6px;
+    border-radius: 100vh;
 }
 
+/* It shouldn't overflow to the lines beside it. */
+span.tariff-level {
+    display: inline-block;
+}
+
+/* Move each token a bit above the previous token. */
 .tariff-level span:not(:first-child) {
     margin-left: -0.7em;
 }
