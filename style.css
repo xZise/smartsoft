@@ -73,13 +73,13 @@ footer > div:not(:last-child)::after {
 
 /* Login page formatting */
 /* Have a minimum padding to each side */
-div.login {
+div.single-container {
     padding-left: 1em;
     padding-right: 1em;
 }
 
 /* Center in the middle */
-div.login > div {
+div.single-container > div {
     min-width: 10em;
     max-width: 20em;
     margin: 3em auto;
@@ -88,24 +88,22 @@ div.login > div {
 }
 
 /* Login form formatting: Each item is in a row with a bit of gap in between, also padding on the outside */
-div.login form {
+div.single-container form {
     display: flex;
     flex-direction: column;
-    padding: calc(var(--menu-padding) / 2);
     gap: calc(var(--menu-padding) / 2);
 }
 
-/* The select should not stretch! */
-div.login form select {
-    align-self: start;
-}
-
 /* The first item and each notification should have a certain backgound. */
-div.login > div > :first-child, div.notifications > div {
+div.single-container > div > :first-child, div.notifications > div {
     background: var(--main-color);
     color: var(--main-text-color);
     padding: 4px;
     text-align: center;
+}
+
+div.single-container > div > :not(:first-child) {
+    margin: var(--menu-padding) calc(var(--menu-padding) / 2);
 }
 
 /* Each notification should also have their own margin and border. */
@@ -362,6 +360,11 @@ div.thread .anim-button {
     font-family: var(--mono-text-font);
     padding: 0.25em;
     white-space: nowrap;
+}
+
+span.code {
+    display: inline-block;
+    margin-block: 0.25em;
 }
 
 /* Navigation Handling */

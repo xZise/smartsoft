@@ -25,15 +25,18 @@ class InstallDisplay extends Display {
     public function createPage(bool $validPage, bool $validRights): string {
         $notifications = Notification::createNotificationBox(array());
 
-        return "<div class=\"login\">
+        return "<div class=\"single-container\">
         <div>
             <div>Installation</div>
             $notifications
             <p>Es gibt keine Datenbank mit dem Namen <span class=\"code\">smartsoft</span>.
             Soll eine Datenbank mit den passenden Tabellen angelegt werden?</p>
+            <p>Dabei wird auch ein Benutzer mit den Benutzernamen <span class=\"code\">administrator</span> angelegt.</p>
             <form action=\"process.php\" method=\"post\">
-                <label for=\"withdata\">Mit Testdaten</label>
+                <div>
                 <input type=\"checkbox\" checked=\"checked\" name=\"withdata\" id=\"withdata\" />
+                <label for=\"withdata\">Mit Testdaten</label>
+                </div>
                 <button name=\"page\" value=\"install\" id=\"page\">Datenbank erstellen</button>
             </form>
         </div>

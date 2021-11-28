@@ -31,11 +31,11 @@ class LoginDisplay extends Display {
         }
         $notifications = Notification::createNotificationBox($notifications);
 
-        return "<div class=\"login\">
+        return "<div class=\"single-container\">
         <div>
             <div>Anmelden</div>
             $notifications
-            <form action=\"login_check.php\" method=\"post\">
+            <form action=\"login_check.php\" method=\"post\" class=\"login\">
                 <label for=\"username\">Benutzername:</label>
                 <input type=\"text\" id=\"username\" name=\"username\">
                 <label for=\"password\">Passwort:</label>
