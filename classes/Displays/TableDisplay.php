@@ -75,7 +75,7 @@ abstract class TableDisplay extends UserDisplay {
 
     private function createEditForm($item) {
         $action = $item === null ? "add" : "edit";
-        $htmlCode = "<form class=\"table\" action=\"process.php\" method=\"POST\"><input type=\"hidden\" name=\"page\" value=\"{$this->pageName}\" /><input type=\"hidden\" name=\"action\" value=\"$action\" />";
+        $htmlCode = "<form class=\"table caption-value-grid\" action=\"process.php\" method=\"POST\"><input type=\"hidden\" name=\"page\" value=\"{$this->pageName}\" /><input type=\"hidden\" name=\"action\" value=\"$action\" />";
         foreach ($this->properties as $field) {
             if ($field->getColumn() == "ID") {
                 if ($item !== null) {
@@ -90,6 +90,13 @@ abstract class TableDisplay extends UserDisplay {
                 $htmlCode .= $formField;
             }
         }
+        $htmlCode .= "<label for=\"password\">Passwort:</label>";
+        $htmlCode .= "<div class=\"password-box caption-value-grid\">
+                        <input type=\"checkbox\" name=\"SetPassword\" id=\"SetPassword\" />
+                        <label for=\"SetPassword\">Passwort setzen</label>
+                        <input type=\"password\" placeholder=\"Neues Passwort\"
+                            id=\"NewPassword\" name=\"NewPassword\" />
+                      </div>";
         $htmlCode .= "<input type=\"submit\" class=\"anim-button bordered\"></form>";
         return $htmlCode;
     }
@@ -211,5 +218,9 @@ abstract class TableDisplay extends UserDisplay {
             default:
             case "list": return $this->getPlural();
         }
+    }
+
+    public function getLoadMethod(): ?string {
+        return "registerPassword()";
     }
 }

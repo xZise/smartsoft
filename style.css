@@ -170,23 +170,35 @@ form.addnew {
     margin: 0px 4px;
 }
 
-form.table {
+/* A generic css class, which has two columns, one shrinking and one taking up as much space as possible. */
+.caption-value-grid {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--gap);
+}
+
+form.table {
     max-width: 30em;
 }
 
+/* Place the submit-Button on the right column. */
 form.table input[type="submit"] {
     grid-column-end: -1;
 }
 
+/* Place the checkbox all the way to the left. */
 form.table input[type="checkbox"] {
     justify-self: start;
 }
 
-form.table > input, form.table > button, form.table > select, form.addnew > button {
+/* Inputs, buttons and selects overwrite the font by default. */
+form.table input, form.table button, form.table select, form.addnew button {
     font-family: var(--text-font);
+}
+
+/* The password input should span the complete row. */
+form.table input[type="password"] {
+    grid-column: 1 / -1;
 }
 
 /* The customer number is 12 characters long and so monospace seems sensible. */

@@ -28,11 +28,15 @@ class AccountProcessor extends Processor {
 
     protected function processAction(string $action) {
         $newPassword = $_POST["new_password"] ?? "";
-        if ($newPassword === "" || $newPassword !== $_POST["new_password_repeat"]) {
+        if ($newPassword !== $_POST["new_password_repeat"]) {
             throw new ProcessActionException("Passwörter stimmen nicht überein");
         }
 
-        $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+        if ($newPassword !== "") {
+            $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+        } else {
+            $hash = null;
+        }
         $db = new Database();
         try {
             $stmt = $db->getDatabase()->prepare("UPDATE user SET Password = ? WHERE ID = ?");

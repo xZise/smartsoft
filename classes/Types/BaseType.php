@@ -91,8 +91,13 @@ class BaseType {
      */
     public function insertUser(Database $db, array $params): void {
         /* First insert into `user` to get ID and then insert that into the type-related table. */
-        $stmt = $db->getDatabase()->prepare("INSERT INTO user (Username, Password) VALUES (?, NULL)");
+        $stmt = $db->getDatabase()->prepare("INSERT INTO user (Username, Password) VALUES (?, ?)");
         $stmt->bindValue(1, $params["Username"]);
+        if (isset($params["SetPassword"]) && isset($params["NewPassword"]) && $params["NewPassword"] !== "") {
+            $stmt->bindValue(2, $params["NewPassword"]);
+        } else {
+            $stmt->bindValue(2, null);
+        }
         $stmt->execute();
 
         $columns = $this->getColumns();

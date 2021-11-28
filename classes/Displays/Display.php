@@ -22,4 +22,13 @@ abstract class Display {
      */
     public abstract function getTitle(): string;
 
+    /**
+     * Returns the JavaScript-function which should be called on load of the body. If null, it won't load any function.
+     *
+     * @return ?string The name of the JavaScript-function, or null.
+     */
+    public function getLoadMethod(): ?string {
+        return null;
+    }
+
 }

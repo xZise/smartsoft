@@ -77,9 +77,21 @@ abstract class TableProcessor extends Processor {
         $sql .= " WHERE ID = :id";
         $db = new Database();
         try {
-            $stmt = $db->getDatabase()->prepare("UPDATE user SET Username = ? WHERE ID = ?");
-            $stmt->bindValue(1, $_POST["Username"]);
-            $stmt->bindValue(2, $id);
+            $userSql = "UPDATE user SET Username = :username";
+            if (isset($_POST["SetPassword"])) {
+                $userSql .= ", Password = :password";
+            }
+            $userSql .= " WHERE ID = :id";
+            $stmt = $db->getDatabase()->prepare($userSql);
+            $stmt->bindValue(":username", $_POST["Username"]);
+            $stmt->bindValue(":id", $id);
+            if (isset($_POST["SetPassword"])) {
+                if (isset($_POST["NewPassword"]) && $_POST["NewPassword"] !== "") {
+                    $stmt->bindValue(":password", $_POST["NewPassword"]);
+                } else {
+                    $stmt->bindValue(":password", null);
+                }
+            }
             $stmt->execute();
 
             $stmt = $db->getDatabase()->prepare($sql);
