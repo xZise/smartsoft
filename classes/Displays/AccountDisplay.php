@@ -1,4 +1,5 @@
 <?php
+/** For the documentation, see in the class. */
 
 namespace SmartSoft\Displays;
 
@@ -72,6 +73,11 @@ class AccountDisplay extends UserDisplay {
         return "Konto";
     }
 
+    /**
+     * Returns whether this display can be shown. As long as someone is logged in this should always work.
+     *
+     * @return bool Returns true.
+     */
     public function checkRights(): bool {
         return true;
     }

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu&family=Ubuntu+Mono&display=swap');
 
+/* Contains default values. */
 :root {
     --menu-padding: 0.75em;
     --gap: 4px;
@@ -66,12 +67,13 @@ footer {
     flex-wrap: wrap;
 }
 
+/* Place a delimiter between each footer item. */
 footer > div:not(:last-child)::after {
 	content: '⏺';
 	margin: 0 calc(var(--menu-padding) / 2);
 }
 
-/* Login page formatting */
+/* Formatting of the container without the menu structure. */
 /* Have a minimum padding to each side */
 div.single-container {
     padding-left: 1em;
@@ -87,7 +89,7 @@ div.single-container > div {
     border-radius: 0.2em;
 }
 
-/* Login form formatting: Each item is in a row with a bit of gap in between, also padding on the outside */
+/* Form formatting: Each item is in a row with a bit of gap in between */
 div.single-container form {
     display: flex;
     flex-direction: column;
@@ -102,6 +104,7 @@ div.single-container > div > :first-child, div.notifications > div {
     text-align: center;
 }
 
+/* Add a margin around each item in the single-container (except for the header). */
 div.single-container > div > :not(:first-child) {
     margin: var(--menu-padding) calc(var(--menu-padding) / 2);
 }

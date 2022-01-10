@@ -1,4 +1,5 @@
 <?php
+/** For the documentation, see in the class. */
 
 namespace SmartSoft\Displays;
 
@@ -14,7 +15,6 @@ use SmartSoft\Database;
 use SmartSoft\HtmlOption;
 use SmartSoft\User;
 use SmartSoft\Role;
-use SmartSoft\Displays\TableDisplay;
 use SmartSoft\Types\CustomerType;
 use SmartSoft\Types\Field;
 

@@ -1,4 +1,6 @@
 <?php
+/** For the documentation, see in the class. */
+
 namespace SmartSoft;
 
 /** An enum representing different the roles. */

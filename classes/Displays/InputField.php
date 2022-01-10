@@ -1,4 +1,5 @@
 <?php
+/** For the documentation, see in the class. */
 
 namespace SmartSoft\Displays;
 
@@ -10,7 +11,7 @@ require_once("classes/Displays/FormField.php");
 class InputField extends FormField {
 
     /**
-     * __construct
+     * Creates a new InputField instance.
      *
      * @param string $name Name and ID of the form field
      * @param string $type The type of the input field, by default "text".

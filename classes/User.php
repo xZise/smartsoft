@@ -1,4 +1,5 @@
 <?php
+/** For the documentation, see in the class. */
 
 namespace SmartSoft;
 

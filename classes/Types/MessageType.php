@@ -1,4 +1,5 @@
 <?php
+/** For the documentation, see in the class. */
 
 namespace SmartSoft\Types;
 
@@ -11,7 +12,7 @@ require_once("classes/Types/BaseType.php");
 final class MessageType extends BaseType {
 
     private static MessageType $instance;
-    
+
     /** Creates a new instance, it is private as it is a singleton instance. */
     private function __construct() {
         parent::__construct("message", array());

@@ -1,4 +1,5 @@
 <?php
+/** For the documentation, see in the class. */
 
 namespace SmartSoft\Displays;
 
@@ -7,6 +8,7 @@ require_once("classes/HtmlOption.php");
 require_once("classes/Role.php");
 require_once("classes/User.php");
 require_once("classes/Displays/UserDisplay.php");
+require_once("classes/Displays/FormField.php");
 require_once("classes/Displays/InputField.php");
 require_once("classes/Exceptions/InsufficientRightsException.php");
 require_once("classes/Exceptions/InvalidActionException.php");

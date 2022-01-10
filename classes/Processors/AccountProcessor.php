@@ -1,16 +1,15 @@
 <?php
+/** For the documentation, see in the class. */
 
 namespace SmartSoft\Processors;
 
 require_once("classes/Database.php");
-require_once("classes/Role.php");
 require_once("classes/User.php");
 
 require_once("classes/Exceptions/ProcessActionException.php");
 require_once("classes/Processors/Processor.php");
 
 use SmartSoft\Database;
-use SmartSoft\Role;
 use SmartSoft\User;
 use SmartSoft\Exceptions\ProcessActionException;
 

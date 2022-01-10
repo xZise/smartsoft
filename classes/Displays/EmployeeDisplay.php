@@ -1,4 +1,5 @@
 <?php
+/** For the documentation, see in the class. */
 
 namespace SmartSoft\Displays;
 
@@ -11,7 +12,6 @@ require_once("classes/Types/Field.php");
 
 use SmartSoft\Database;
 use SmartSoft\User;
-use SmartSoft\HtmlOption;
 use SmartSoft\Displays\TableDisplay;
 use SmartSoft\Types\EmployeeType;
 use SmartSoft\Types\Field;
